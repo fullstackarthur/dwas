@@ -1,73 +1,35 @@
 import { memo } from 'react'
-import { useUIStore, useNotificationStore, useAppStore } from '../stores'
+import { useNotificationStore } from '../stores'
+import { useSearchStore } from '../stores/commandStore'
 import {
   FiSearch,
   FiBell,
-  FiCpu,
-  FiRefreshCw,
-  FiCommand,
+  FiPlus,
+  FiMessageSquare,
+  FiHelpCircle,
+  FiSettings,
+  FiChevronDown,
 } from 'react-icons/fi'
-import clsx from 'clsx'
 
-function Breadcrumbs() {
-  const { breadcrumbs } = useUIStore()
-
-  return (
-    <div className="flex items-center gap-1 text-[13px]">
-      {breadcrumbs.map((crumb, i) => (
-        <div key={i} className="flex items-center gap-1">
-          {i > 0 && <span className="text-text-muted">/</span>}
-          {crumb.href ? (
-            <a
-              href={crumb.href}
-              className={clsx(
-                'hover:text-text-primary transition-colors duration-120',
-                crumb.active ? 'text-text-primary font-medium' : 'text-text-secondary'
-              )}
-            >
-              {crumb.label}
-            </a>
-          ) : (
-            <span className={clsx(crumb.active ? 'text-text-primary font-medium' : 'text-text-secondary')}>
-              {crumb.label}
-            </span>
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function SearchTrigger() {
-  const { openSearch } = useUIStore()
+function SearchBar() {
+  const { open: openSearch } = useSearchStore()
 
   return (
     <button
       onClick={openSearch}
-      className="flex items-center gap-2 px-2 py-1 bg-bg-tertiary border border-border-panel rounded-md text-text-muted hover:text-text-secondary hover:border-text-muted/30 transition-colors duration-120 w-56"
+      className="flex items-center gap-2 px-3 py-1.5 bg-white border border-[#DFE1E6] rounded-md text-text-muted hover:text-text-secondary hover:border-text-muted/40 transition-colors duration-120 flex-1 max-w-xl min-w-0"
     >
-      <FiSearch className="w-3.5 h-3.5" />
-      <span className="text-[12px]">Search...</span>
-      <kbd className="ml-auto text-[10px] bg-bg-primary px-1.5 py-0.5 rounded border border-border-panel text-text-muted">
-        /
-      </kbd>
+      <FiSearch className="w-4 h-4 flex-shrink-0" />
+      <span className="text-[14px] truncate">Search</span>
     </button>
   )
 }
 
-function CommandPaletteTrigger() {
-  const { openCommandPalette } = useUIStore()
-
+function CreateButton() {
   return (
-    <button
-      onClick={openCommandPalette}
-      className="flex items-center gap-1.5 px-2 py-1 text-text-muted hover:text-text-secondary transition-colors duration-120"
-      title="Command Palette"
-    >
-      <FiCommand className="w-4 h-4" />
-      <kbd className="text-[10px] bg-bg-tertiary px-1.5 py-0.5 rounded border border-border-panel">
-        K
-      </kbd>
+    <button className="flex items-center gap-1.5 px-3 py-1.5 bg-active-blue text-white text-[14px] font-medium rounded-md hover:bg-active-blue/90 transition-colors duration-120">
+      <FiPlus className="w-4 h-4" />
+      <span className="hidden sm:inline">Create</span>
     </button>
   )
 }
@@ -76,71 +38,58 @@ function NotificationBell() {
   const { unreadCount } = useNotificationStore()
 
   return (
-    <button className="relative p-1.5 text-text-muted hover:text-text-secondary transition-colors duration-120">
-      <FiBell className="w-4 h-4" />
+    <button className="relative p-2 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded-md transition-colors duration-120">
+      <FiBell className="w-5 h-5" />
       {unreadCount > 0 && (
-        <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-error-red text-[9px] font-medium text-white rounded-full flex items-center justify-center">
-          {unreadCount > 9 ? '9+' : unreadCount}
-        </span>
+        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error-red rounded-full" />
       )}
     </button>
   )
 }
 
-function SyncStatus() {
-  const { syncStatus, triggerSync } = useAppStore()
-
-  const syncLabel = {
-    synced: 'Synced',
-    syncing: 'Syncing...',
-    error: 'Sync error',
-  }[syncStatus]
-
+function UserMenu() {
   return (
-    <button
-      onClick={triggerSync}
-      className="flex items-center gap-1.5 px-2 py-1 text-[12px] text-text-muted hover:text-text-secondary transition-colors duration-120"
-    >
-      <FiRefreshCw
-        className={clsx(
-          'w-3 h-3',
-          syncStatus === 'syncing' && 'animate-spin'
-        )}
-      />
-      <span>{syncLabel}</span>
-    </button>
-  )
-}
-
-function AILauncher() {
-  return (
-    <button className="flex items-center gap-1.5 px-2 py-1 text-text-muted hover:text-active-blue transition-colors duration-120">
-      <FiCpu className="w-4 h-4" />
-      <span className="text-[12px]">AI</span>
+    <button className="flex items-center gap-2 p-1 hover:bg-hover-surface rounded-md transition-colors duration-120">
+      <div className="w-7 h-7 rounded-full bg-active-blue/10 flex items-center justify-center">
+        <span className="text-[11px] font-semibold text-active-blue">AM</span>
+      </div>
+      <FiChevronDown className="w-3.5 h-3.5 text-text-muted" />
     </button>
   )
 }
 
 export const Topbar = memo(function Topbar() {
   return (
-    <header className="h-12 bg-bg-secondary border-b border-border-panel flex items-center px-3 gap-2 flex-shrink-0">
-      <Breadcrumbs />
+    <header className="h-12 bg-white border-b border-[#DFE1E6] flex items-center px-4 flex-shrink-0">
+      <SearchBar />
 
-      <div className="flex-1" />
+      <div className="flex items-center gap-4 ml-6">
+        <CreateButton />
 
-      <SearchTrigger />
-      <CommandPaletteTrigger />
-      <AILauncher />
-      <NotificationBell />
-      <SyncStatus />
+        <div className="w-px h-6 bg-[#DFE1E6]" />
 
-      <div className="w-px h-5 bg-divider mx-1" />
+        <button className="flex items-center gap-1.5 px-3 py-1.5 text-[13px] text-text-secondary border border-[#DFE1E6] rounded-md hover:bg-hover-surface hover:text-text-primary transition-colors duration-120">
+          <FiMessageSquare className="w-4 h-4" />
+          <span className="hidden lg:inline">Chat</span>
+        </button>
 
-      <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded-full bg-selected-surface flex items-center justify-center">
-          <span className="text-[10px] font-medium text-text-secondary">AM</span>
+        <div className="w-px h-6 bg-[#DFE1E6]" />
+
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+
+          <button className="p-2 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded-md transition-colors duration-120">
+            <FiHelpCircle className="w-5 h-5" />
+          </button>
+
+          <button className="p-2 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded-md transition-colors duration-120">
+            <FiSettings className="w-5 h-5" />
+          </button>
+
+          <div className="w-px h-6 bg-[#DFE1E6]" />
+
+          <UserMenu />
         </div>
-        <span className="text-[12px] text-text-secondary hidden xl:block">Arjun Mehta</span>
       </div>
     </header>
   )

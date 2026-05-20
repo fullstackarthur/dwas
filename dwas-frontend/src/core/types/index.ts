@@ -160,3 +160,39 @@ export type {
   RFQRecord,
   InboxItem,
 } from './operational'
+
+export type {
+  TimelineEvent,
+  ApprovalStep,
+  DispatchInfo,
+  VendorQuotation,
+  SLAInfo,
+  RequirementDetail,
+  FinancialEntry,
+  OperationalNote,
+  AIRecommendation as WorkspaceAIRecommendation,
+  ParticipantEntry,
+  WorkflowState,
+} from './thread'
+
+export type { Attachment as ThreadAttachment } from './thread'
+
+export type {
+  RealtimeEvent,
+  RealtimeEventType,
+  PresenceState,
+  OperationalNotification,
+  AssignmentEvent,
+  AuditEntry,
+  SyncState,
+} from './realtime'
+
+export type {
+  CommandDefinition,
+  SearchFilter,
+  SearchResult,
+  WorkspacePanel,
+  WorkspaceState,
+  OfflineQueueItem,
+  PWAState,
+} from './command'

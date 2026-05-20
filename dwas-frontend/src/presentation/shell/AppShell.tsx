@@ -18,11 +18,11 @@ export const AppShell = memo(function AppShell({ children }: AppShellProps) {
 
       <div className="flex-1 flex flex-col min-w-0">
         <Topbar />
-        <main className="flex-1 min-h-0 overflow-hidden">
+        <main className="flex-1 min-h-0 overflow-auto">
           <div className="flex h-full">
             <div
               className={clsx(
-                'flex-1 min-w-0 overflow-hidden transition-all duration-180',
+                'flex-1 min-w-0',
                 rightSidebarVisible ? 'mr-0' : ''
               )}
             >

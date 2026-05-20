@@ -1,28 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Inter:opsz,wght@14..32,100..900&display=swap');
 @import "tailwindcss";
 @import "./presentation/styles/components.css";
 
 @theme {
-  --color-bg-primary: #1D2125;
-  --color-bg-secondary: #22272B;
-  --color-bg-tertiary: #2C333A;
-  --color-border-panel: #3C444C;
+  --color-bg-primary: #F4F5F7;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #FAFBFC;
+  --color-border-panel: #DFE1E6;
 
-  --color-text-primary: #DEE4EA;
-  --color-text-secondary: #9FADBC;
-  --color-text-muted: #7D8B99;
+  --color-text-primary: #172B4D;
+  --color-text-secondary: #44546F;
+  --color-text-muted: #6B778C;
 
-  --color-active-blue: #579DFF;
-  --color-success-green: #4BCE97;
-  --color-warning-yellow: #F5CD47;
-  --color-error-red: #F87168;
-  --color-info-cyan: #6CC3E0;
+  --color-active-blue: #0052CC;
+  --color-success-green: #36B37E;
+  --color-warning-yellow: #FFAB00;
+  --color-error-red: #DE350B;
+  --color-info-cyan: #00B8D9;
 
-  --color-hover-surface: #313940;
-  --color-selected-surface: #3D4751;
+  --color-hover-surface: #EBECF0;
+  --color-selected-surface: #DEEBFF;
 
-  --color-divider: rgba(255, 255, 255, 0.08);
+  --color-divider: rgba(9, 30, 66, 0.13);
 
-  --font-sans: 'Inter Variable', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
   --text-xs: 11px;
   --text-sm: 12px;

@@ -1,23 +1,23 @@
 export const colors = {
-  bgPrimary: '#1D2125',
-  bgSecondary: '#22272B',
-  bgTertiary: '#2C333A',
-  borderPanel: '#3C444C',
+  bgPrimary: '#F4F5F7',
+  bgSecondary: '#FFFFFF',
+  bgTertiary: '#FAFBFC',
+  borderPanel: '#DFE1E6',
 
-  textPrimary: '#DEE4EA',
-  textSecondary: '#9FADBC',
-  textMuted: '#7D8B99',
+  textPrimary: '#172B4D',
+  textSecondary: '#44546F',
+  textMuted: '#6B778C',
 
-  activeBlue: '#579DFF',
-  successGreen: '#4BCE97',
-  warningYellow: '#F5CD47',
-  errorRed: '#F87168',
-  infoCyan: '#6CC3E0',
+  activeBlue: '#0052CC',
+  successGreen: '#36B37E',
+  warningYellow: '#FFAB00',
+  errorRed: '#DE350B',
+  infoCyan: '#00B8D9',
 
-  hoverSurface: '#313940',
-  selectedSurface: '#3D4751',
+  hoverSurface: '#EBECF0',
+  selectedSurface: '#DEEBFF',
 
-  divider: 'rgba(255, 255, 255, 0.08)',
+  divider: 'rgba(9, 30, 66, 0.13)',
 } as const
 
 export const spacing = {
