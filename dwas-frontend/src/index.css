@@ -1,0 +1,96 @@
+@import "tailwindcss";
+@import "./presentation/styles/components.css";
+
+@theme {
+  --color-bg-primary: #1D2125;
+  --color-bg-secondary: #22272B;
+  --color-bg-tertiary: #2C333A;
+  --color-border-panel: #3C444C;
+
+  --color-text-primary: #DEE4EA;
+  --color-text-secondary: #9FADBC;
+  --color-text-muted: #7D8B99;
+
+  --color-active-blue: #579DFF;
+  --color-success-green: #4BCE97;
+  --color-warning-yellow: #F5CD47;
+  --color-error-red: #F87168;
+  --color-info-cyan: #6CC3E0;
+
+  --color-hover-surface: #313940;
+  --color-selected-surface: #3D4751;
+
+  --color-divider: rgba(255, 255, 255, 0.08);
+
+  --font-sans: 'Inter Variable', system-ui, -apple-system, sans-serif;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-body: 13px;
+  --text-base: 14px;
+  --text-panel: 16px;
+  --text-heading: 18px;
+  --text-title: 24px;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+
+  --transition-fast: 120ms ease;
+  --transition-normal: 180ms ease;
+}
+
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-panel) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border-panel);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+::selection {
+  background: var(--color-active-blue);
+  color: var(--color-bg-primary);
+}
