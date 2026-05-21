@@ -189,9 +189,6 @@ export const useRFQDeskStore = create<RFQDeskStore>((set, get) => ({
     try {
       const rfqs = await rfqRepository.fetchAllRfqs()
       set({ rfqs, loading: false, error: null })
-      if (rfqs.length > 0 && !get().selectedRfqId) {
-        get().selectRfq(rfqs[0].id)
-      }
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Failed to fetch RFQs'
       console.error('[rfqStore] fetchRfqs failed, falling back to mock:', e)
@@ -200,9 +197,6 @@ export const useRFQDeskStore = create<RFQDeskStore>((set, get) => ({
         loading: false,
         error: message,
       })
-      if (mockRFQs.length > 0 && !get().selectedRfqId) {
-        get().selectRfq(mockRFQs[0].id)
-      }
     }
   },
 

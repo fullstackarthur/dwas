@@ -36,7 +36,7 @@ export function mapDbItemToRFQItem(row: Record<string, unknown>): RFQItem {
   return {
     id: (row.id as string) || '',
     rfqId: (row.rfq_id as string) || (row.rfqId as string) || '',
-    materialDescription: (row.material_description as string) || (row.materialDescription as string) || '',
+    materialDescription: (row.material_description as string) || (row.materialDescription as string) || (row.material as string) || '',
     quantity: Number(row.quantity ?? 0),
     unit: (row.unit as string) || '',
     specifications: (row.specifications as Record<string, string>) || undefined,

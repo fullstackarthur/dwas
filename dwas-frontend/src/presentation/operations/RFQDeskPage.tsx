@@ -9,7 +9,12 @@ export const RFQDeskPage = memo(function RFQDeskPage() {
   const unsubscribeFromRealtime = useRFQDeskStore((s) => s.unsubscribeFromRealtime)
 
   useEffect(() => {
-    fetchRfqs()
+    fetchRfqs().then(() => {
+      const state = useRFQDeskStore.getState()
+      if (state.rfqs.length > 0 && !state.selectedRfqId) {
+        state.selectRfq(state.rfqs[0].id)
+      }
+    })
     subscribeToRealtime()
     return () => {
       unsubscribeFromRealtime()
