@@ -1,17 +1,12 @@
 import { memo } from 'react'
-import { useUIStore } from '../stores'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
-import { RightSidebar } from './RightSidebar'
-import clsx from 'clsx'
 
 interface AppShellProps {
   children: React.ReactNode
 }
 
 export const AppShell = memo(function AppShell({ children }: AppShellProps) {
-  const { rightSidebarVisible } = useUIStore()
-
   return (
     <div className="flex h-full w-full bg-bg-primary">
       <Sidebar />
@@ -20,15 +15,9 @@ export const AppShell = memo(function AppShell({ children }: AppShellProps) {
         <Topbar />
         <main className="flex-1 min-h-0 overflow-auto">
           <div className="flex h-full">
-            <div
-              className={clsx(
-                'flex-1 min-w-0',
-                rightSidebarVisible ? 'mr-0' : ''
-              )}
-            >
+            <div className="flex-1 min-w-0">
               {children}
             </div>
-            <RightSidebar />
           </div>
         </main>
       </div>

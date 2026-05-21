@@ -1,24 +1,20 @@
 import { memo, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useUIStore, useNotificationStore } from '../stores'
+import { useUIStore } from '../stores'
 import {
   FiLayout,
-  FiBarChart2,
-  FiStar,
-  FiPackage,
-  FiTruck,
-  FiMapPin,
-  FiMessageSquare,
-  FiCpu,
-  FiAlertTriangle,
-  FiInbox,
+  FiFileText,
   FiUsers,
-  FiSettings,
-  FiMoreHorizontal,
+  FiClipboard,
+  FiShoppingCart,
+  FiMapPin,
+  FiTruck,
+  FiCheckCircle,
+  FiDollarSign,
   FiPlus,
   FiChevronDown,
   FiChevronRight,
-  FiMoreVertical,
+  FiMoreHorizontal,
 } from 'react-icons/fi'
 import clsx from 'clsx'
 
@@ -32,34 +28,29 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: 'for-you', label: 'For you', icon: FiLayout, href: '/dashboard' },
-  { id: 'recent', label: 'Recent', icon: FiBarChart2, href: '/queues' },
-  { id: 'starred', label: 'Starred', icon: FiStar, href: '/queues/escalations' },
+  { id: 'dash', label: 'Dash', icon: FiLayout, href: '/dashboard' },
 ]
 
 const projectItems: NavItem[] = [
-  { id: 'procurement', label: 'Procurement', icon: FiPackage, href: '/queues/procurement', color: '#36B37E' },
-  { id: 'dispatch', label: 'Dispatch', icon: FiTruck, href: '/dispatch', color: '#0052CC', badge: 3 },
-  { id: 'logistics', label: 'Logistics', icon: FiMapPin, href: '/queues/logistics', color: '#FFAB00' },
-  { id: 'vendor', label: 'Vendor Communication', icon: FiMessageSquare, href: '/queues/vendor_communication', color: '#DE350B' },
-  { id: 'ai-review', label: 'AI Review', icon: FiCpu, href: '/queues/ai_review', color: '#6B778C', badge: 1 },
-  { id: 'escalations', label: 'Escalations', icon: FiAlertTriangle, href: '/queues/escalations', color: '#DE350B', badge: 1 },
+  { id: 'rfq-desk', label: 'RFQ Desk', icon: FiFileText, href: '/operations/rfq-desk', color: '#0052CC' },
+  { id: 'vendor-coordination', label: 'Vendor Coordination', icon: FiUsers, href: '/operations/vendor-coordination', color: '#36B37E' },
+  { id: 'client-quotations', label: 'Client Quotations', icon: FiClipboard, href: '/operations/client-quotations', color: '#FFAB00' },
+  { id: 'purchase-orders', label: 'Purchase Orders', icon: FiShoppingCart, href: '/operations/purchase-orders', color: '#6B778C' },
+  { id: 'logistics', label: 'Logistics', icon: FiMapPin, href: '/operations/logistics', color: '#FFAB00' },
+  { id: 'dispatch-tracking', label: 'Dispatch Tracking', icon: FiTruck, href: '/operations/dispatch-tracking', color: '#0052CC' },
+  { id: 'deliveries', label: 'Deliveries', icon: FiCheckCircle, href: '/operations/deliveries', color: '#36B37E' },
+  { id: 'payments-tally', label: 'Payments & Tally', icon: FiDollarSign, href: '/operations/payments-tally', color: '#DE350B' },
 ]
 
-const systemItems: NavItem[] = [
-  { id: 'inbox', label: 'Inbox', icon: FiInbox, href: '/inbox', badge: 3 },
-  { id: 'collaboration', label: 'Collaboration', icon: FiUsers, href: '/collaboration' },
-  { id: 'settings', label: 'Settings', icon: FiSettings, href: '/settings' },
-]
+
 
 function NavItemRow({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
   const navigate = useNavigate()
   const location = useLocation()
   const { setActiveNav } = useUIStore()
-  const { unreadCount } = useNotificationStore()
 
   const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/')
-  const badge = item.id === 'inbox' ? unreadCount || item.badge : item.badge
+  const badge = item.badge
 
   return (
     <button
@@ -88,21 +79,16 @@ function NavItemRow({ item, collapsed }: { item: NavItem; collapsed: boolean }) 
         <item.icon className="w-4 h-4" />
       </span>
 
-      {!collapsed && (
-        <>
-          <span className="truncate">{item.label}</span>
-          {badge !== undefined && badge > 0 && (
-            <span className="ml-auto text-[10px] font-medium text-text-muted bg-hover-surface px-1.5 py-0.5 rounded-sm">
-              {badge}
-            </span>
+          {!collapsed && (
+            <>
+              <span className="truncate">{item.label}</span>
+              {badge !== undefined && badge > 0 && (
+                <span className="ml-auto text-[10px] font-medium text-text-muted bg-hover-surface px-1.5 py-0.5 rounded-sm">
+                  {badge}
+                </span>
+              )}
+            </>
           )}
-          {item.id === 'dispatch' && (
-            <button className="ml-auto opacity-0 group-hover:opacity-100 p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-all">
-              <FiMoreVertical className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </>
-      )}
     </button>
   )
 }
@@ -177,12 +163,22 @@ export const Sidebar = memo(function Sidebar() {
             >
               <span>Operations</span>
               <div className="flex items-center gap-1">
-                <button className="p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-colors">
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                  className="p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-colors cursor-pointer"
+                >
                   <FiPlus className="w-3.5 h-3.5" />
-                </button>
-                <button className="p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-colors">
+                </div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                  className="p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-colors cursor-pointer"
+                >
                   <FiMoreHorizontal className="w-3.5 h-3.5" />
-                </button>
+                </div>
                 {projectsExpanded ? (
                   <FiChevronDown className="w-3.5 h-3.5 text-text-muted" />
                 ) : (
@@ -198,23 +194,6 @@ export const Sidebar = memo(function Sidebar() {
             {projectItems.map((item) => (
               <NavItemRow key={item.id} item={item} collapsed={sidebarCollapsed} />
             ))}
-          </div>
-        )}
-
-        {!sidebarCollapsed && (
-          <div className="mt-3 pt-3 border-t border-[#DFE1E6]">
-            {systemItems.map((item) => (
-              <NavItemRow key={item.id} item={item} collapsed={sidebarCollapsed} />
-            ))}
-          </div>
-        )}
-
-        {!sidebarCollapsed && (
-          <div className="mt-1">
-            <button className="w-full flex items-center gap-2.5 px-3 py-1.5 text-[13px] text-text-secondary hover:text-text-primary hover:bg-hover-surface rounded transition-colors duration-120">
-              <FiMoreHorizontal className="w-4 h-4 text-text-muted" />
-              <span>More</span>
-            </button>
           </div>
         )}
       </nav>

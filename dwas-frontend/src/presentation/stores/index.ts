@@ -1,6 +1,9 @@
 import { create } from 'zustand'
-import type { User, QueueItem, Thread, Notification, AIRecommendation, BreadcrumbItem } from '../../core/types'
-import { mockUsers, mockQueueItems, mockThreads, mockNotifications, mockAIRecommendations, mockDashboardMetrics } from '../../data/mock'
+import type { User, Notification, AIRecommendation, BreadcrumbItem } from '../../core/types'
+import { mockUsers, mockNotifications, mockAIRecommendations, mockDashboardMetrics } from '../../data/mock'
+import { useRFQDeskStore } from './rfqStore'
+
+export { useRFQDeskStore }
 
 interface UIState {
   sidebarCollapsed: boolean
@@ -38,61 +41,6 @@ export const useUIStore = create<UIState>((set) => ({
   closeSearch: () => set({ searchOpen: false }),
   setActiveNav: (id) => set({ activeNavId: id }),
   setBreadcrumbs: (breadcrumbs) => set({ breadcrumbs }),
-}))
-
-interface QueueState {
-  items: QueueItem[]
-  selectedId: string | null
-  filter: { queueType?: string; priority?: string; status?: string }
-  loading: boolean
-  setItems: (items: QueueItem[]) => void
-  setSelectedId: (id: string | null) => void
-  setFilter: (filter: Partial<QueueState['filter']>) => void
-  setLoading: (loading: boolean) => void
-  getFilteredItems: () => QueueItem[]
-}
-
-export const useQueueStore = create<QueueState>((set, get) => ({
-  items: mockQueueItems,
-  selectedId: null,
-  filter: {},
-  loading: false,
-  setItems: (items) => set({ items }),
-  setSelectedId: (id) => set({ selectedId: id }),
-  setFilter: (filter) => set((s) => ({ filter: { ...s.filter, ...filter } })),
-  setLoading: (loading) => set({ loading }),
-  getFilteredItems: () => {
-    const { items, filter } = get()
-    return items.filter((item) => {
-      if (filter.queueType && item.type !== filter.queueType) return false
-      if (filter.priority && item.priority !== filter.priority) return false
-      if (filter.status && item.status !== filter.status) return false
-      return true
-    })
-  },
-}))
-
-interface ThreadState {
-  threads: Thread[]
-  activeThreadId: string | null
-  loading: boolean
-  setThreads: (threads: Thread[]) => void
-  setActiveThreadId: (id: string | null) => void
-  setLoading: (loading: boolean) => void
-  getActiveThread: () => Thread | undefined
-}
-
-export const useThreadStore = create<ThreadState>((set, get) => ({
-  threads: mockThreads,
-  activeThreadId: null,
-  loading: false,
-  setThreads: (threads) => set({ threads }),
-  setActiveThreadId: (id) => set({ activeThreadId: id }),
-  setLoading: (loading) => set({ loading }),
-  getActiveThread: () => {
-    const { threads, activeThreadId } = get()
-    return threads.find((t) => t.id === activeThreadId)
-  },
 }))
 
 interface NotificationState {

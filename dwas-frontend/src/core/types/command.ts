@@ -31,26 +31,6 @@ export interface SearchResult {
   relatedId?: string
 }
 
-export interface WorkspacePanel {
-  id: string
-  type: string
-  title: string
-  visible: boolean
-  collapsed: boolean
-  size: number
-  position: 'left' | 'right' | 'bottom'
-  docked: boolean
-}
-
-export interface WorkspaceState {
-  panels: WorkspacePanel[]
-  sidebarWidth: number
-  rightSidebarWidth: number
-  density: 'compact' | 'comfortable' | 'spacious'
-  layout: 'single' | 'split' | 'triple'
-  savedLayouts: { name: string; panels: WorkspacePanel[] }[]
-}
-
 export interface OfflineQueueItem {
   id: string
   type: string

@@ -1,6 +1,42 @@
 import { create } from 'zustand'
-import type { OperationalNotification, AssignmentEvent, AuditEntry } from '../../core/types/realtime'
+import type { User, QueueType } from '../../core/types'
 import { mockUsers } from '../../data/mock'
+
+interface OperationalNotification {
+  id: string
+  type: 'critical' | 'warning' | 'normal' | 'low'
+  category: string
+  title: string
+  message: string
+  createdAt: string
+  read: boolean
+  sourceUser?: User
+  relatedItemId?: string
+  relatedQueueType?: QueueType
+}
+
+interface AssignmentEvent {
+  id: string
+  itemId: string
+  itemTitle: string
+  assignedBy: User
+  assignedTo: User
+  queueType: QueueType
+  timestamp: string
+  reason?: string
+}
+
+interface AuditEntry {
+  id: string
+  action: string
+  actor: User
+  target: string
+  targetType: string
+  timestamp: string
+  oldValue?: string
+  newValue?: string
+  details?: string
+}
 
 export const mockOperationalNotifications: OperationalNotification[] = [
   {
