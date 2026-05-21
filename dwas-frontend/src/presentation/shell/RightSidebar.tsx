@@ -158,8 +158,12 @@ export const RightSidebar = memo(function RightSidebar() {
 
   if (!rightSidebarVisible) return null
 
+  const filteredRecommendations = recommendations.filter(
+    (rec) => !rec.title.includes('Payment risk') && !rec.title.includes('Optimize Vizag')
+  )
+
   const tabs = [
-    { id: 'ai' as const, label: 'AI', count: recommendations.length },
+    { id: 'ai' as const, label: 'AI', count: filteredRecommendations.length },
     { id: 'activity' as const, label: 'Activity' },
     { id: 'metadata' as const, label: 'Info' },
   ]
@@ -197,10 +201,10 @@ export const RightSidebar = memo(function RightSidebar() {
       <div className="flex-1 overflow-y-auto">
         {rightSidebarTab === 'ai' && (
           <div className="p-2 space-y-2">
-            {recommendations.map((rec) => (
+            {filteredRecommendations.map((rec) => (
               <RecommendationCard key={rec.id} id={rec.id} />
             ))}
-            {recommendations.length === 0 && (
+            {filteredRecommendations.length === 0 && (
               <div className="p-4 text-center">
                 <div className="text-[12px] text-text-muted">No active recommendations</div>
               </div>
