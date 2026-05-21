@@ -52,6 +52,14 @@ export function mapDbTimelineEvent(row: Record<string, unknown>): RFQTimelineEve
     type: (row.event_type as RFQTimelineEvent['type']) || (row.type as RFQTimelineEvent['type']) || 'system',
     title: (row.title as string) || '',
     description: (row.description as string) || undefined,
+    actor: row.actor
+      ? mapDbUserToUser({
+          id: (row.actor as Record<string, unknown>).id as string,
+          name: (row.actor as Record<string, unknown>).name as string,
+          email: (row.actor as Record<string, unknown>).email as string,
+          role: (row.actor as Record<string, unknown>).role as string,
+        })
+      : undefined,
     timestamp: row.timestamp ? new Date(row.timestamp as string).toISOString() : new Date().toISOString(),
     previousStage: (row.previous_stage as RFQStage) || (row.previousStage as RFQStage) || undefined,
     newStage: (row.new_stage as RFQStage) || (row.newStage as RFQStage) || undefined,

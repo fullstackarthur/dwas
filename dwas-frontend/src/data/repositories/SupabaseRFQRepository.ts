@@ -1,11 +1,51 @@
 import { supabase } from '../../lib/supabase'
-import type { RFQ } from '../../core/types/rfq'
+import type { RFQ, RFQTimelineEvent } from '../../core/types/rfq'
 import {
   mapCompleteRfqJsonToRFQ,
   mapRfqSummaryRowToRFQ,
   mapDbTimelineEvent,
   mapDbUserToUser,
 } from '../mappers/rfqMapper'
+
+function generateFallbackTimeline(json: Record<string, unknown>): RFQTimelineEvent[] {
+  const events: RFQTimelineEvent[] = []
+  const id = (json.id as string) || ''
+  const createdAt = json.createdAt || json.created_at
+  const stage = json.stage as string
+
+  events.push({
+    id: `${id}-created`,
+    rfqId: id,
+    type: 'system',
+    title: 'RFQ Created',
+    timestamp: createdAt ? new Date(createdAt as string).toISOString() : new Date().toISOString(),
+  })
+
+  if (stage && stage !== 'new') {
+    events.push({
+      id: `${id}-stage`,
+      rfqId: id,
+      type: 'workflow_transition',
+      title: `Stage changed to ${stage.replace(/_/g, ' ')}`,
+      previousStage: 'new',
+      newStage: stage as RFQTimelineEvent['newStage'],
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+    })
+  }
+
+  const recCount = (json.recommendations as unknown[])?.length || 0
+  if (recCount > 0) {
+    events.push({
+      id: `${id}-ai-match`,
+      rfqId: id,
+      type: 'ai',
+      title: `AI identified ${recCount} vendor match${recCount > 1 ? 'es' : ''}`,
+      timestamp: new Date(Date.now() - 7200000).toISOString(),
+    })
+  }
+
+  return events
+}
 
 export interface RFQRepository {
   fetchAllRfqs(): Promise<RFQ[]>
@@ -70,7 +110,21 @@ export class SupabaseRFQRepository implements RFQRepository {
 
     const reporter = reporterData.data ? mapDbUserToUser(reporterData.data) : undefined
     const assignee = assigneeData.data ? mapDbUserToUser(assigneeData.data) : undefined
-    const timeline = (timelineData.data || []).map(mapDbTimelineEvent)
+
+    let timeline: ReturnType<typeof mapDbTimelineEvent>[] = []
+    if (timelineData.data && timelineData.data.length > 0) {
+      timeline = timelineData.data.map(mapDbTimelineEvent)
+      console.log('[SupabaseRFQRepository] Loaded', timeline.length, 'timeline events from table')
+    } else {
+      const rawTimeline = json.timeline as Record<string, unknown>[] | undefined
+      if (rawTimeline && rawTimeline.length > 0) {
+        timeline = rawTimeline.map(mapDbTimelineEvent)
+        console.log('[SupabaseRFQRepository] Loaded', timeline.length, 'timeline events from RPC json')
+      } else {
+        timeline = generateFallbackTimeline(json)
+        console.log('[SupabaseRFQRepository] Generated', timeline.length, 'fallback timeline events for RFQ', id)
+      }
+    }
 
     const metadata: Record<string, string | number | boolean> = {}
     if (metadataData.data) {
@@ -110,13 +164,14 @@ export class SupabaseRFQRepository implements RFQRepository {
 
     const client = rfqData.clients as { name: string; contact_name: string | null; email: string | null } | null
 
-    const [itemsData, tagsData, docsData, reqsData, recsData, quotesData] = await Promise.all([
+    const [itemsData, tagsData, docsData, reqsData, recsData, quotesData, timelineData] = await Promise.all([
       supabase.from('rfq_items').select('*').eq('rfq_id', id).order('line_number'),
       supabase.from('rfq_tags').select('tag_name').eq('rfq_id', id),
       supabase.from('rfq_documents').select('*').eq('rfq_id', id),
       supabase.from('rfq_requirements').select('*').eq('rfq_id', id),
       supabase.from('vendor_recommendations').select('*, vendors(name, location)').eq('rfq_id', id).order('ranking'),
       supabase.from('vendor_quotes').select('*, vendors(name)').eq('rfq_id', id),
+      supabase.from('rfq_timeline_events').select('*').eq('rfq_id', id).order('timestamp', { ascending: false }),
     ])
 
     console.log('[SupabaseRFQRepository] Fallback recsData:', recsData.data?.length ?? 0, 'records')
@@ -155,6 +210,7 @@ export class SupabaseRFQRepository implements RFQRepository {
         ...q,
         vendorName: (q.vendors as { name: string })?.name || 'Unknown',
       })),
+      timeline: timelineData.data || [],
     }
   }
 

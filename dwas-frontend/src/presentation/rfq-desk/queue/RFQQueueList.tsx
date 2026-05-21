@@ -1,4 +1,4 @@
-import { memo, memo as memo2 } from 'react'
+import { memo } from 'react'
 import clsx from 'clsx'
 import { useRFQDeskStore } from '../../stores'
 import { RFQOperationalRow } from './RFQOperationalRow'
@@ -12,8 +12,30 @@ interface RFQQueueListProps {
 export const RFQQueueList = memo(function RFQQueueList({
   collapsed,
 }: RFQQueueListProps) {
-  const { getFilteredRfqs, selectedRfqId, selectRfq } = useRFQDeskStore()
+  const { getFilteredRfqs, selectedRfqId, selectRfq, loading } = useRFQDeskStore()
   const rfqs = getFilteredRfqs()
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-active-blue animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-active-blue animate-pulse" style={{ animationDelay: '0.2s' }} />
+          <span className="w-1.5 h-1.5 rounded-full bg-active-blue animate-pulse" style={{ animationDelay: '0.4s' }} />
+        </div>
+      </div>
+    )
+  }
+
+  if (rfqs.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <div className="text-[12px] text-text-muted">No RFQs found</div>
+        </div>
+      </div>
+    )
+  }
 
   if (collapsed) {
     return (
@@ -84,7 +106,7 @@ const CollapsedRFQItem = memo(function CollapsedRFQItem({
   )
 })
 
-const PriorityDot = memo2(function PriorityDot({
+const PriorityDot = memo(function PriorityDot({
   priority,
 }: {
   priority: RFQ['priority']
@@ -102,7 +124,7 @@ const PriorityDot = memo2(function PriorityDot({
   )
 })
 
-const SLADot = memo2(function SLADot({ status }: { status: RFQ['slaStatus'] }) {
+const SLADot = memo(function SLADot({ status }: { status: RFQ['slaStatus'] }) {
   return (
     <span
       className={clsx(
