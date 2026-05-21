@@ -5,7 +5,6 @@ import type {
   RFQDocument,
   RFQRequirement,
   AIVendorRecommendation,
-  VendorQuote,
 } from '../../core/types/rfq'
 import { mockUsers } from './index'
 

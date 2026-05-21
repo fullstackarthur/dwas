@@ -1,13 +1,10 @@
 import { memo } from 'react'
-import clsx from 'clsx'
 import type { RFQ } from '../../../core/types/rfq'
-import { mockRFQStages } from '../../../data/mock/rfq'
 import { RFQStageTransitionPanel } from './RFQStageTransitionPanel'
 import { VendorSelectionConfirmation } from './VendorSelectionConfirmation'
 import { RequestClarificationAction } from './RequestClarificationAction'
 import { SendToVendorAction } from './SendToVendorAction'
 import { InternalNotesPanel } from './InternalNotesPanel'
-import { motion } from 'framer-motion'
 
 interface FollowupActionPanelProps {
   rfq: RFQ

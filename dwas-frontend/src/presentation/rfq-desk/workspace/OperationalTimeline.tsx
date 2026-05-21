@@ -1,26 +1,18 @@
 import { memo, useMemo } from 'react'
 import {
   ReactFlow,
-  MiniMap,
-  Controls,
-  Background,
   useNodesState,
   useEdgesState,
-  addEdge,
-  Handle,
-  Position,
   type Node,
   type Edge,
   type NodeTypes,
-  type EdgeTypes,
   MarkerType,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import clsx from 'clsx'
 import type { RFQ } from '../../../core/types/rfq'
 import { formatDistanceToNow } from '../../../core/utils'
-import { motion } from 'framer-motion'
-import { FiUser, FiCpu, FiSettings, FiArrowRight, FiCheck } from 'react-icons/fi'
+import { FiUser, FiCpu, FiSettings, FiArrowRight } from 'react-icons/fi'
 
 interface OperationalTimelineProps {
   rfq: RFQ
@@ -39,7 +31,7 @@ export const OperationalTimeline = memo(function OperationalTimeline({
       position: { x: index * 200, y: 0 },
       data: {
         label: (
-          <TimelineNodeContent event={event} isLast={index === sortedTimeline.length - 1} />
+          <TimelineNodeContent event={event} />
         ),
       },
       type: 'timelineNode',
@@ -94,10 +86,8 @@ import type { RFQTimelineEvent } from '../../../core/types/rfq'
 
 const TimelineNodeContent = memo(function TimelineNodeContent({
   event,
-  isLast,
 }: {
   event: RFQTimelineEvent
-  isLast: boolean
 }) {
   const Icon =
     event.type === 'human' ? FiUser : event.type === 'ai' ? FiCpu : event.type === 'system' ? FiSettings : FiArrowRight
@@ -165,38 +155,4 @@ const TimelineNode = memo(function TimelineNode({ data }: { data: { label: React
 
 const nodeTypes: NodeTypes = {
   timelineNode: TimelineNode,
-}
-
-const TimelineEdge = memo(function TimelineEdge({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-}: {
-  id: string
-  sourceX: number
-  sourceY: number
-  targetX: number
-  targetY: number
-}) {
-  return (
-    <g>
-      <path
-        fill="none"
-        stroke="#DFE1E6"
-        strokeWidth={2}
-        d={`M${sourceX},${sourceY} C${sourceX},${sourceY + 30} ${targetX},${targetY - 30} ${targetX},${targetY}`}
-      />
-      <polygon
-        points="-6,0 0,4 6,0"
-        fill="#DFE1E6"
-        transform={`translate(${targetX - 6}, ${targetY - 4}) rotate(0)`}
-      />
-    </g>
-  )
-})
-
-const edgeTypes: EdgeTypes = {
-  smoothstep: TimelineEdge,
 }

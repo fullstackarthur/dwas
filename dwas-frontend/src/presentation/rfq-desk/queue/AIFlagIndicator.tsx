@@ -1,5 +1,4 @@
 import { memo } from 'react'
-import clsx from 'clsx'
 import { FiCpu } from 'react-icons/fi'
 
 export const AIFlagIndicator = memo(function AIFlagIndicator({

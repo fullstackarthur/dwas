@@ -1,7 +1,6 @@
 import { memo } from 'react'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
-import clsx from 'clsx'
 
 interface AppShellProps {
   children: React.ReactNode

@@ -1,11 +1,8 @@
 import { memo } from 'react'
 import clsx from 'clsx'
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useRFQDeskStore } from '../../stores'
 import { QueueRailCollapseToggle } from './QueueRailCollapseToggle'
 import { RFQQueueList } from './RFQQueueList'
-import { QueueRailResizeHandle } from './QueueRailResizeHandle'
-import { motion } from 'framer-motion'
 
 export const CollapsibleQueueRail = memo(function CollapsibleQueueRail() {
   const queueRailCollapsed = useRFQDeskStore((s) => s.queueRailCollapsed)

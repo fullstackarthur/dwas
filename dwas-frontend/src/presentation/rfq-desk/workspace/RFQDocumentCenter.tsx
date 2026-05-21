@@ -1,7 +1,6 @@
 import { memo } from 'react'
-import clsx from 'clsx'
 import type { RFQ } from '../../../core/types/rfq'
-import { FiFile, FiImage, FiFileText, FiPaperclip } from 'react-icons/fi'
+import { FiFile, FiImage, FiFileText } from 'react-icons/fi'
 import { formatFileSize } from '../../../core/utils'
 import { OCRProcessingIndicator } from './OCRProcessingIndicator'
 

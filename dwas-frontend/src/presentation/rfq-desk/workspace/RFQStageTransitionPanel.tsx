@@ -1,5 +1,4 @@
 import { memo, useState } from 'react'
-import clsx from 'clsx'
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi'
 import { mockRFQStages } from '../../../data/mock/rfq'
 import type { RFQ, RFQStage } from '../../../core/types/rfq'

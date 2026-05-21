@@ -1,6 +1,5 @@
 import { memo } from 'react'
-import clsx from 'clsx'
-import { FiPlus, FiRefreshCw } from 'react-icons/fi'
+import { FiPlus } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
 export const RFQQuickActions = memo(function RFQQuickActions() {

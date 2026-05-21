@@ -12,7 +12,6 @@ export const ExtractedRequirementsPanel = memo(function ExtractedRequirementsPan
   rfq,
 }: ExtractedRequirementsPanelProps) {
   const missingRequirements = rfq.requirements.filter((r) => r.validationStatus === 'missing')
-  const uncertainRequirements = rfq.requirements.filter((r) => r.validationStatus === 'uncertain')
 
   return (
     <div className="panel">

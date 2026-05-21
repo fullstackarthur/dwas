@@ -8,7 +8,7 @@ interface SendToVendorActionProps {
   rfq: RFQ
 }
 
-export const SendToVendorAction = memo(function SendToVendorAction({ rfq }: SendToVendorActionProps) {
+export const SendToVendorAction = memo(function SendToVendorAction({}: SendToVendorActionProps) {
   const hasSelectedVendor = false
 
   return (

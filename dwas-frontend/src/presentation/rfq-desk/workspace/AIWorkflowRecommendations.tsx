@@ -1,7 +1,6 @@
 import { memo } from 'react'
 import { FiCpu } from 'react-icons/fi'
 import type { RFQ } from '../../../core/types/rfq'
-import { mockRFQStages } from '../../../data/mock/rfq'
 
 interface AIWorkflowRecommendationsProps {
   rfq: RFQ
@@ -34,7 +33,6 @@ export const AIWorkflowRecommendations = memo(function AIWorkflowRecommendations
 
 function getRecommendations(rfq: RFQ): string[] {
   const recs: string[] = []
-  const stageInfo = mockRFQStages.find((s) => s.id === rfq.stage)
 
   if (rfq.stage === 'new') {
     recs.push('Initiate AI extraction to parse requirements from attached documents')

@@ -5,9 +5,7 @@ interface SimilarHistoricalRFQsProps {
   rfq: { id: string; clientName: string }
 }
 
-export const SimilarHistoricalRFQs = memo(function SimilarHistoricalRFQs({
-  rfq,
-}: SimilarHistoricalRFQsProps) {
+export const SimilarHistoricalRFQs = memo(function SimilarHistoricalRFQs({}: SimilarHistoricalRFQsProps) {
   const similarRFQs = [
     { id: 'rfq-89', number: 'RFQ-89', similarity: 87, outcome: 'Completed' },
     { id: 'rfq-76', number: 'RFQ-76', similarity: 72, outcome: 'Completed' },

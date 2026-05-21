@@ -1,4 +1,4 @@
-import type { User, Priority } from './index'
+import type { User } from './index'
 
 export type RFQStage =
   | 'new'

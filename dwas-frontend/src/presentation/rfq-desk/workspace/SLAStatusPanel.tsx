@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import clsx from 'clsx'
 import type { RFQ } from '../../../core/types/rfq'
-import { FiClock, FiAlertTriangle, FiCheckCircle } from 'react-icons/fi'
+import { FiAlertTriangle, FiCheckCircle } from 'react-icons/fi'
 import { formatDistanceToNow } from '../../../core/utils'
 
 interface SLAStatusPanelProps {

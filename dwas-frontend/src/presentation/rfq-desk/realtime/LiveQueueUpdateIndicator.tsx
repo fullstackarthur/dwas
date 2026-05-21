@@ -1,5 +1,4 @@
 import { memo } from 'react'
-import { FiRefreshCw } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 import { useRFQDeskStore } from '../../stores'
 

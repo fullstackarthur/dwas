@@ -7,7 +7,7 @@ interface RequestClarificationActionProps {
   rfq: RFQ
 }
 
-export const RequestClarificationAction = memo(function RequestClarificationAction({ rfq }: RequestClarificationActionProps) {
+export const RequestClarificationAction = memo(function RequestClarificationAction({}: RequestClarificationActionProps) {
   return (
     <motion.button
       whileHover={{ scale: 1.01 }}

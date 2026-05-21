@@ -1,5 +1,4 @@
 import { memo } from 'react'
-import clsx from 'clsx'
 import type { User } from '../../../core/types'
 
 export const RFQAssignmentIndicator = memo(function RFQAssignmentIndicator({

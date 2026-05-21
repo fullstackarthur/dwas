@@ -164,37 +164,24 @@ export type {
 } from './rfq'
 
 export type {
-  TimelineEvent,
-  ApprovalStep,
-  DispatchInfo,
-  VendorQuotation,
-  SLAInfo,
-  RequirementDetail,
-  FinancialEntry,
-  OperationalNote,
-  AIRecommendation as WorkspaceAIRecommendation,
-  ParticipantEntry,
-  WorkflowState,
-} from './thread'
-
-export type { Attachment as ThreadAttachment } from './thread'
-
-export type {
-  RealtimeEvent,
-  RealtimeEventType,
-  PresenceState,
-  OperationalNotification,
-  AssignmentEvent,
-  AuditEntry,
-  SyncState,
-} from './realtime'
+  VendorResponse,
+  ApprovalRequest,
+  DispatchRecord,
+  TransportRecord,
+  OperationalEvent,
+  WorkloadEntry,
+  OperationalHealthMetric,
+  EscalationRecord,
+  TallyRecord,
+  DriverUpdate,
+  RFQRecord,
+  InboxItem,
+} from './operational'
 
 export type {
   CommandDefinition,
   SearchFilter,
   SearchResult,
-  WorkspacePanel,
-  WorkspaceState,
   OfflineQueueItem,
   PWAState,
 } from './command'

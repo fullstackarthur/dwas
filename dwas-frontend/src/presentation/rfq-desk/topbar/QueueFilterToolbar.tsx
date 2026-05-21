@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import clsx from 'clsx'
-import { FiSearch, FiFilter, FiRefreshCw, FiPlus } from 'react-icons/fi'
+import { FiFilter } from 'react-icons/fi'
 import { RFQGlobalSearch } from './RFQGlobalSearch'
 import { RFQQuickActions } from './RFQQuickActions'
 import { LiveQueueUpdateIndicator } from '../realtime/LiveQueueUpdateIndicator'

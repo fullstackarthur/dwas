@@ -1,5 +1,4 @@
 import { memo } from 'react'
-import clsx from 'clsx'
 import type { RFQ } from '../../../core/types/rfq'
 import { mockRFQStages } from '../../../data/mock/rfq'
 

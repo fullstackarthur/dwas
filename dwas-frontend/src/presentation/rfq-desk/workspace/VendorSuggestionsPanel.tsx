@@ -1,8 +1,6 @@
 import { memo } from 'react'
-import clsx from 'clsx'
 import type { RFQ } from '../../../core/types/rfq'
 import { VendorRecommendationCard } from './VendorRecommendationCard'
-import { VendorScoreIndicator } from './VendorScoreIndicator'
 
 interface VendorSuggestionsPanelProps {
   rfq: RFQ
@@ -33,7 +31,7 @@ export const VendorSuggestionsPanel = memo(function VendorSuggestionsPanel({
           </div>
         ) : (
           rfq.vendorRecommendations.map((vendor) => (
-            <VendorRecommendationCard key={vendor.id} vendor={vendor} rfqId={rfq.id} />
+            <VendorRecommendationCard key={vendor.id} vendor={vendor} />
           ))
         )}
       </div>

@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from 'react'
+import { memo } from 'react'
 import clsx from 'clsx'
 import { RFQDeskLayout } from './RFQDeskLayout'
 import { QueueFilterToolbar } from '../topbar/QueueFilterToolbar'

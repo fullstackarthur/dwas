@@ -1,5 +1,4 @@
 import { memo } from 'react'
-import clsx from 'clsx'
 
 export const RFQUnreadIndicator = memo(function RFQUnreadIndicator({
   count,

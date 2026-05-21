@@ -2,24 +2,16 @@ import { memo } from 'react'
 import clsx from 'clsx'
 import type { AIVendorRecommendation } from '../../../core/types/rfq'
 import { VendorScoreIndicator } from './VendorScoreIndicator'
-import { FiMapPin, FiTrendingUp, FiClock } from 'react-icons/fi'
+import { FiMapPin } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
 interface VendorRecommendationCardProps {
   vendor: AIVendorRecommendation
-  rfqId: string
 }
 
 export const VendorRecommendationCard = memo(function VendorRecommendationCard({
   vendor,
-  rfqId,
 }: VendorRecommendationCardProps) {
-  const confidenceColor =
-    vendor.confidence === 'high'
-      ? 'text-success-green'
-      : vendor.confidence === 'medium'
-        ? 'text-warning-yellow'
-        : 'text-text-muted'
 
   return (
     <motion.div

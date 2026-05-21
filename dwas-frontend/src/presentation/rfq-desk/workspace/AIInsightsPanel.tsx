@@ -1,7 +1,6 @@
 import { memo } from 'react'
-import clsx from 'clsx'
 import type { RFQ } from '../../../core/types/rfq'
-import { FiCpu, FiAlertTriangle, FiTrendingUp, FiLink } from 'react-icons/fi'
+import { FiCpu } from 'react-icons/fi'
 import { SimilarHistoricalRFQs } from './SimilarHistoricalRFQs'
 import { PricingDeviationWarning } from './PricingDeviationWarning'
 import { AIWorkflowRecommendations } from './AIWorkflowRecommendations'
@@ -11,7 +10,6 @@ interface AIInsightsPanelProps {
 }
 
 export const AIInsightsPanel = memo(function AIInsightsPanel({ rfq }: AIInsightsPanelProps) {
-  const hasInsights = rfq.aiConfidence > 0
 
   return (
     <div className="panel">
