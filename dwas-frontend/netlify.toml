@@ -5,12 +5,12 @@
   publish = "dist"
   command = "npm run build"
 
-# SPA routing - redirect all requests to index.html
+# SPA routing - redirect all non-matching requests to index.html
+# This must be the LAST redirect rule
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  conditions = { NOT = [{ status = [200] }] }
 
 # Security headers for all requests
 [[headers]]
