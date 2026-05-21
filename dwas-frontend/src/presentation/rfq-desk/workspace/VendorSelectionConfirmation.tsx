@@ -12,7 +12,9 @@ interface VendorSelectionConfirmationProps {
 export const VendorSelectionConfirmation = memo(function VendorSelectionConfirmation({ rfq }: VendorSelectionConfirmationProps) {
   const acceptQuote = useRFQDeskStore((s) => s.acceptQuote)
 
-  const selectedVendor = rfq.vendorRecommendations.find((v) => v.isSelected)
+  const selectedVendor = rfq.vendorRecommendations.find(
+    (v) => v.isSelected || v.id === rfq.selectedVendorId
+  )
   const vendorQuote = rfq.quotations.find(
     (q) => q.vendorId === selectedVendor?.vendorId && q.status !== 'rejected'
   )

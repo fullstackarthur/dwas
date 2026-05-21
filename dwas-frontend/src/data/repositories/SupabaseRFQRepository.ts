@@ -256,6 +256,20 @@ export class SupabaseRFQRepository implements RFQRepository {
       throw recError || new Error('Recommendation not found')
     }
 
+    await supabase
+      .from('vendor_recommendations')
+      .update({ is_selected: false })
+      .eq('rfq_id', rfqId)
+
+    const { error: updateError } = await supabase
+      .from('vendor_recommendations')
+      .update({ is_selected: true })
+      .eq('id', vendorRecommendationId)
+
+    if (updateError) {
+      console.warn('[SupabaseRFQRepository] is_selected column update failed:', updateError)
+    }
+
     const { error } = await supabase
       .from('rfqs')
       .update({

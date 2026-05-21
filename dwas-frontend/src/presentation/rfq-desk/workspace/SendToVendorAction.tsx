@@ -12,7 +12,9 @@ interface SendToVendorActionProps {
 export const SendToVendorAction = memo(function SendToVendorAction({ rfq }: SendToVendorActionProps) {
   const sendToVendor = useRFQDeskStore((s) => s.sendToVendor)
 
-  const selectedVendor = rfq.vendorRecommendations.find((v) => v.isSelected)
+  const selectedVendor = rfq.vendorRecommendations.find(
+    (v) => v.isSelected || v.id === rfq.selectedVendorId
+  )
   const alreadySent = rfq.quotations.some(
     (q) => q.vendorId === selectedVendor?.vendorId
   )
