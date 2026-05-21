@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import type { RFQ } from '../../../core/types/rfq'
 import { VendorRecommendationCard } from './VendorRecommendationCard'
+import { useRFQDeskStore } from '../../stores'
 
 interface VendorSuggestionsPanelProps {
   rfq: RFQ
@@ -9,6 +10,8 @@ interface VendorSuggestionsPanelProps {
 export const VendorSuggestionsPanel = memo(function VendorSuggestionsPanel({
   rfq,
 }: VendorSuggestionsPanelProps) {
+  const selectVendor = useRFQDeskStore((s) => s.selectVendor)
+
   return (
     <div className="panel">
       <div className="panel-header flex items-center">
@@ -31,7 +34,11 @@ export const VendorSuggestionsPanel = memo(function VendorSuggestionsPanel({
           </div>
         ) : (
           rfq.vendorRecommendations.map((vendor) => (
-            <VendorRecommendationCard key={vendor.id} vendor={vendor} />
+            <VendorRecommendationCard
+              key={vendor.id}
+              vendor={vendor}
+              onSelect={(vendorId) => selectVendor(rfq.id, vendorId)}
+            />
           ))
         )}
       </div>

@@ -2,21 +2,28 @@ import { memo } from 'react'
 import clsx from 'clsx'
 import type { AIVendorRecommendation } from '../../../core/types/rfq'
 import { VendorScoreIndicator } from './VendorScoreIndicator'
-import { FiMapPin } from 'react-icons/fi'
+import { FiMapPin, FiCheck } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
 interface VendorRecommendationCardProps {
   vendor: AIVendorRecommendation
+  onSelect?: (vendorId: string) => void
 }
 
 export const VendorRecommendationCard = memo(function VendorRecommendationCard({
   vendor,
+  onSelect,
 }: VendorRecommendationCardProps) {
 
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
-      className="p-3 border border-border-panel rounded hover:border-active-blue/30 transition-colors duration-120 cursor-pointer"
+      className={clsx(
+        'p-3 border rounded transition-colors duration-120',
+        vendor.isSelected
+          ? 'border-active-blue bg-active-blue/5'
+          : 'border-border-panel hover:border-active-blue/30'
+      )}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
@@ -25,6 +32,12 @@ export const VendorRecommendationCard = memo(function VendorRecommendationCard({
               {vendor.vendorName}
             </span>
             <VendorScoreIndicator score={vendor.score} />
+            {vendor.isSelected && (
+              <span className="flex items-center gap-1 text-[10px] font-medium text-active-blue">
+                <FiCheck className="w-3 h-3" />
+                Selected
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-1 mt-0.5 text-[11px] text-text-muted">
             <FiMapPin className="w-3 h-3" />
@@ -83,8 +96,17 @@ export const VendorRecommendationCard = memo(function VendorRecommendationCard({
       )}
 
       <div className="mt-3 flex gap-2">
-        <button className="flex-1 text-[11px] font-medium text-active-blue hover:bg-active-blue/10 py-1.5 rounded border border-active-blue/30 transition-colors duration-120">
-          Select Vendor
+        <button
+          onClick={() => onSelect?.(vendor.id)}
+          disabled={vendor.isSelected}
+          className={clsx(
+            'flex-1 text-[11px] font-medium py-1.5 rounded border transition-colors duration-120',
+            vendor.isSelected
+              ? 'bg-active-blue text-white border-active-blue cursor-default'
+              : 'text-active-blue hover:bg-active-blue/10 border-active-blue/30'
+          )}
+        >
+          {vendor.isSelected ? 'Selected' : 'Select Vendor'}
         </button>
         <button className="flex-1 text-[11px] font-medium text-text-secondary hover:bg-hover-surface py-1.5 rounded border border-border-panel transition-colors duration-120">
           View Profile

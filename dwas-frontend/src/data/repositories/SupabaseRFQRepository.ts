@@ -52,6 +52,11 @@ export interface RFQRepository {
   fetchRfqById(id: string): Promise<RFQ | null>
   updateRfqStage(rfqId: string, stage: string): Promise<void>
   markAsRead(rfqId: string): Promise<void>
+  selectVendor(rfqId: string, vendorRecommendationId: string): Promise<void>
+  acceptQuote(rfqId: string, quoteId: string): Promise<void>
+  rejectQuote(rfqId: string, quoteId: string): Promise<void>
+  sendToVendor(rfqId: string, vendorId: string): Promise<void>
+  createTimelineEvent(rfqId: string, eventType: string, title: string, description?: string, metadata?: Record<string, unknown>): Promise<void>
   subscribeToRfqChanges(callback: (rfqs: RFQ[]) => void): () => void
 }
 
@@ -235,6 +240,176 @@ export class SupabaseRFQRepository implements RFQRepository {
     if (error) {
       console.error('[SupabaseRFQRepository] markAsRead error:', error)
       throw error
+    }
+  }
+
+  async selectVendor(rfqId: string, vendorRecommendationId: string): Promise<void> {
+    const { data: rec, error: recError } = await supabase
+      .from('vendor_recommendations')
+      .select('vendor_id')
+      .eq('id', vendorRecommendationId)
+      .eq('rfq_id', rfqId)
+      .single()
+
+    if (recError || !rec) {
+      console.error('[SupabaseRFQRepository] selectVendor: recommendation not found', recError)
+      throw recError || new Error('Recommendation not found')
+    }
+
+    const { error } = await supabase
+      .from('rfqs')
+      .update({
+        stage: 'quotation_review',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', rfqId)
+
+    if (error) {
+      console.error('[SupabaseRFQRepository] selectVendor error:', error)
+      throw error
+    }
+
+    try {
+      await supabase
+        .from('rfqs')
+        .update({ selected_vendor_id: rec.vendor_id })
+        .eq('id', rfqId)
+    } catch {
+      // Column may not exist yet, skip
+    }
+
+    await this.createTimelineEvent(
+      rfqId,
+      'human',
+      'Vendor selected',
+      `Vendor ${rec.vendor_id} selected for RFQ ${rfqId}`,
+      { vendorId: rec.vendor_id, recommendationId: vendorRecommendationId }
+    )
+  }
+
+  async acceptQuote(rfqId: string, quoteId: string): Promise<void> {
+    const { data: quote, error: quoteFetchError } = await supabase
+      .from('vendor_quotes')
+      .select('vendor_id')
+      .eq('id', quoteId)
+      .eq('rfq_id', rfqId)
+      .single()
+
+    if (quoteFetchError || !quote) {
+      console.error('[SupabaseRFQRepository] acceptQuote: quote not found', quoteFetchError)
+      throw quoteFetchError || new Error('Quote not found')
+    }
+
+    const { error: quoteError } = await supabase
+      .from('vendor_quotes')
+      .update({ status: 'accepted', updated_at: new Date().toISOString() })
+      .eq('id', quoteId)
+      .eq('rfq_id', rfqId)
+
+    if (quoteError) {
+      console.error('[SupabaseRFQRepository] acceptQuote error:', quoteError)
+      throw quoteError
+    }
+
+    await supabase
+      .from('vendor_quotes')
+      .update({ status: 'rejected', updated_at: new Date().toISOString() })
+      .eq('rfq_id', rfqId)
+      .neq('id', quoteId)
+
+    await supabase
+      .from('rfqs')
+      .update({
+        status: 'won',
+        stage: 'order_confirmation',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', rfqId)
+
+    try {
+      await supabase
+        .from('rfqs')
+        .update({ accepted_quote_id: quoteId, selected_vendor_id: quote.vendor_id })
+        .eq('id', rfqId)
+    } catch {
+      // Column may not exist yet, skip
+    }
+
+    await this.createTimelineEvent(
+      rfqId,
+      'human',
+      'Quote accepted',
+      `Quote ${quoteId} accepted. RFQ marked as won.`,
+      { quoteId, vendorId: quote.vendor_id }
+    )
+  }
+
+  async rejectQuote(rfqId: string, quoteId: string): Promise<void> {
+    const { error } = await supabase
+      .from('vendor_quotes')
+      .update({ status: 'rejected', updated_at: new Date().toISOString() })
+      .eq('id', quoteId)
+      .eq('rfq_id', rfqId)
+
+    if (error) {
+      console.error('[SupabaseRFQRepository] rejectQuote error:', error)
+      throw error
+    }
+
+    await this.createTimelineEvent(
+      rfqId,
+      'human',
+      'Quote rejected',
+      `Quote ${quoteId} rejected for RFQ ${rfqId}`,
+      { quoteId }
+    )
+  }
+
+  async sendToVendor(rfqId: string, vendorId: string): Promise<void> {
+    const { error } = await supabase
+      .from('vendor_quotes')
+      .insert({
+        rfq_id: rfqId,
+        vendor_id: vendorId,
+        status: 'submitted',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+
+    if (error) {
+      console.error('[SupabaseRFQRepository] sendToVendor error:', error)
+      throw error
+    }
+
+    await this.createTimelineEvent(
+      rfqId,
+      'human',
+      'RFQ sent to vendor',
+      `RFQ sent to vendor ${vendorId} for quotation`,
+      { vendorId }
+    )
+  }
+
+  async createTimelineEvent(
+    rfqId: string,
+    eventType: string,
+    title: string,
+    description?: string,
+    metadata?: Record<string, unknown>
+  ): Promise<void> {
+    const { error } = await supabase
+      .from('rfq_timeline_events')
+      .insert({
+        rfq_id: rfqId,
+        event_type: eventType,
+        title,
+        description,
+        metadata,
+        timestamp: new Date().toISOString(),
+      })
+
+    if (error) {
+      console.error('[SupabaseRFQRepository] createTimelineEvent error:', error)
     }
   }
 

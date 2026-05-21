@@ -77,6 +77,86 @@ export const useRFQDeskStore = create<RFQDeskStore>((set, get) => ({
     }
   },
 
+  selectVendor: async (rfqId, vendorRecommendationId) => {
+    set((s) => ({
+      rfqs: s.rfqs.map((r) =>
+        r.id === rfqId
+          ? {
+              ...r,
+              selectedVendorId: vendorRecommendationId,
+              vendorRecommendations: r.vendorRecommendations.map((v) =>
+                v.id === vendorRecommendationId ? { ...v, isSelected: true } : { ...v, isSelected: false }
+              ),
+              stage: 'quotation_review' as const,
+              updatedAt: new Date().toISOString(),
+            }
+          : r
+      ),
+    }))
+    try {
+      await rfqRepository.selectVendor(rfqId, vendorRecommendationId)
+    } catch (e) {
+      console.error('[rfqStore] selectVendor failed:', e)
+      get().fetchRfqDetail(rfqId)
+    }
+  },
+
+  acceptQuote: async (rfqId, quoteId) => {
+    set((s) => ({
+      rfqs: s.rfqs.map((r) =>
+        r.id === rfqId
+          ? {
+              ...r,
+              acceptedQuoteId: quoteId,
+              quotations: r.quotations.map((q) =>
+                q.id === quoteId ? { ...q, status: 'accepted' as const } : { ...q, status: 'rejected' as const }
+              ),
+              status: 'won' as const,
+              stage: 'order_confirmation' as const,
+              updatedAt: new Date().toISOString(),
+            }
+          : r
+      ),
+    }))
+    try {
+      await rfqRepository.acceptQuote(rfqId, quoteId)
+    } catch (e) {
+      console.error('[rfqStore] acceptQuote failed:', e)
+      get().fetchRfqDetail(rfqId)
+    }
+  },
+
+  rejectQuote: async (rfqId, quoteId) => {
+    set((s) => ({
+      rfqs: s.rfqs.map((r) =>
+        r.id === rfqId
+          ? {
+              ...r,
+              quotations: r.quotations.map((q) =>
+                q.id === quoteId ? { ...q, status: 'rejected' as const } : q
+              ),
+              updatedAt: new Date().toISOString(),
+            }
+          : r
+      ),
+    }))
+    try {
+      await rfqRepository.rejectQuote(rfqId, quoteId)
+    } catch (e) {
+      console.error('[rfqStore] rejectQuote failed:', e)
+      get().fetchRfqDetail(rfqId)
+    }
+  },
+
+  sendToVendor: async (rfqId, vendorId) => {
+    try {
+      await rfqRepository.sendToVendor(rfqId, vendorId)
+      get().fetchRfqDetail(rfqId)
+    } catch (e) {
+      console.error('[rfqStore] sendToVendor failed:', e)
+    }
+  },
+
   getSelectedRfq: () => {
     const { rfqs, selectedRfqId } = get()
     return rfqs.find((r) => r.id === selectedRfqId)

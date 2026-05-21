@@ -120,6 +120,7 @@ export function mapDbVendorRecommendation(row: Record<string, unknown>): AIVendo
     matchReasons,
     regionCompatibility: (row.region_compatibility as AIVendorRecommendation['regionCompatibility']) || (row.regionCompatibility as AIVendorRecommendation['regionCompatibility']) || 'remote',
     suggestedContacts: (row.suggested_contacts as string[]) || undefined,
+    isSelected: Boolean(row.is_selected ?? row.isSelected),
   }
 }
 
@@ -137,6 +138,9 @@ export function mapDbVendorQuote(row: Record<string, unknown>): VendorQuote {
     deliveryDate: row.delivery_date ? new Date(row.delivery_date as string).toISOString() : (row.deliveryDate ? new Date(row.deliveryDate as string).toISOString() : new Date().toISOString()),
     paymentTerms: (row.payment_terms as string) || (row.paymentTerms as string) || '',
     notes: (row.notes as string) || undefined,
+    status: (row.status as VendorQuote['status']) || 'submitted',
+    counterOfferPrice: row.counter_offer_price ? Number(row.counter_offer_price) : undefined,
+    counterOfferNotes: (row.counter_offer_notes as string) || undefined,
     createdAt: row.created_at ? new Date(row.created_at as string).toISOString() : (row.createdAt ? new Date(row.createdAt as string).toISOString() : new Date().toISOString()),
   }
 }
@@ -192,6 +196,8 @@ export function mapCompleteRfqJsonToRFQ(
     requirements,
     vendorRecommendations: recommendations,
     quotations,
+    selectedVendorId: (json.selectedVendorId as string) || (json.selected_vendor_id as string) || null,
+    acceptedQuoteId: (json.acceptedQuoteId as string) || (json.accepted_quote_id as string) || null,
     metadata: metadata || {},
   }
 }
@@ -241,6 +247,8 @@ export function mapRfqSummaryRowToRFQ(row: Record<string, unknown>): RFQ {
     requirements: [],
     vendorRecommendations: [],
     quotations: [],
+    selectedVendorId: (row.selected_vendor_id as string) || null,
+    acceptedQuoteId: (row.accepted_quote_id as string) || null,
     metadata: {},
   }
 }

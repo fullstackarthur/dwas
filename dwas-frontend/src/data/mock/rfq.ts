@@ -55,7 +55,8 @@ const createVendorRecommendation = (
   vendorLocation: string,
   score: number,
   confidence: AIVendorRecommendation['confidence'],
-  matchReasons: string[]
+  matchReasons: string[],
+  isSelected = false
 ): AIVendorRecommendation => ({
   id,
   rfqId,
@@ -77,6 +78,7 @@ const createVendorRecommendation = (
     competitivenessScore: 70 + Math.random() * 25,
   },
   regionCompatibility: vendorLocation.includes('Hyderabad') || vendorLocation.includes('Secunderabad') ? 'exact' : 'near',
+  isSelected,
 })
 
 const createItem = (
@@ -180,7 +182,9 @@ export const mockRFQs: RFQ[] = [
       ]),
     ],
     quotations: [],
-    metadata: { projectType: 'Metro Construction', contractValue: '4.2 Cr' },
+    selectedVendorId: null,
+    acceptedQuoteId: null,
+    metadata: {},
   },
   {
     id: 'rfq-105',
@@ -222,6 +226,8 @@ export const mockRFQs: RFQ[] = [
     ],
     vendorRecommendations: [],
     quotations: [],
+    selectedVendorId: null,
+    acceptedQuoteId: null,
     metadata: { department: 'Electrical Maintenance', budget: '25L' },
   },
   {
@@ -276,15 +282,18 @@ export const mockRFQs: RFQ[] = [
         vendorName: 'Aludecor Industries',
         rfqId: 'rfq-106',
         pricePerUnit: 1850,
-        totalPrice: 925000,
+        totalPrice: 370000,
         currency: 'INR',
         validUntil: hoursFromNow(168),
-        deliveryDate: hoursFromNow(72),
-        paymentTerms: 'Net 45',
+        deliveryDate: hoursFromNow(96),
+        paymentTerms: '50% advance, 50% on delivery',
         createdAt: hoursAgo(12),
+        status: 'submitted',
       },
     ],
-    metadata: { project: 'Campus Expansion Phase 2', deliveryFloor: 'GF to 3F' },
+    selectedVendorId: null,
+    acceptedQuoteId: null,
+    metadata: {},
   },
   {
     id: 'rfq-107',
@@ -343,6 +352,8 @@ export const mockRFQs: RFQ[] = [
       ]),
     ],
     quotations: [],
+    selectedVendorId: null,
+    acceptedQuoteId: null,
     metadata: { facility: 'Formulation Plant', area: 'Utilities Department' },
   },
   {
@@ -379,6 +390,8 @@ export const mockRFQs: RFQ[] = [
     requirements: [],
     vendorRecommendations: [],
     quotations: [],
+    selectedVendorId: null,
+    acceptedQuoteId: null,
     metadata: { storeLocation: 'Himayath Nagar Showroom' },
   },
   {
@@ -446,8 +459,11 @@ export const mockRFQs: RFQ[] = [
         paymentTerms: 'Net 30',
         notes: 'Price negotiable for orders above 500 SQFT',
         createdAt: hoursAgo(36),
+        status: 'counter_offered',
       },
     ],
+    selectedVendorId: 'vrec-109-1',
+    acceptedQuoteId: null,
     metadata: { building: 'Manufacturing Block C', priority: 'Phase 1 installation' },
   },
   {
@@ -495,6 +511,8 @@ export const mockRFQs: RFQ[] = [
       ]),
     ],
     quotations: [],
+    selectedVendorId: null,
+    acceptedQuoteId: null,
     metadata: { plant: 'Assembly Line 3', area: 'Floor Marking & Protection' },
   },
 ]

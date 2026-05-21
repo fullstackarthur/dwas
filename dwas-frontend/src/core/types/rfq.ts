@@ -31,6 +31,8 @@ export interface RFQItem {
   deliveryLocation?: string
 }
 
+export type VendorQuoteStatus = 'draft' | 'submitted' | 'accepted' | 'rejected' | 'counter_offered' | 'expired'
+
 export interface VendorQuote {
   id: string
   vendorId: string
@@ -43,6 +45,9 @@ export interface VendorQuote {
   deliveryDate: string
   paymentTerms: string
   notes?: string
+  status: VendorQuoteStatus
+  counterOfferPrice?: number
+  counterOfferNotes?: string
   createdAt: string
 }
 
@@ -95,6 +100,7 @@ export interface AIVendorRecommendation {
   }
   regionCompatibility: 'exact' | 'near' | 'remote'
   suggestedContacts?: string[]
+  isSelected: boolean
 }
 
 export interface RFQRequirement {
@@ -138,6 +144,8 @@ export interface RFQ {
   requirements: RFQRequirement[]
   vendorRecommendations: AIVendorRecommendation[]
   quotations: VendorQuote[]
+  selectedVendorId: string | null
+  acceptedQuoteId: string | null
   metadata: Record<string, string | number | boolean>
 }
 
@@ -169,6 +177,10 @@ export interface RFQDeskState {
   setLoading: (loading: boolean) => void
   markAsRead: (rfqId: string) => void
   updateRfqStage: (rfqId: string, stage: RFQStage) => void
+  selectVendor: (rfqId: string, vendorRecommendationId: string) => Promise<void>
+  acceptQuote: (rfqId: string, quoteId: string) => Promise<void>
+  rejectQuote: (rfqId: string, quoteId: string) => Promise<void>
+  sendToVendor: (rfqId: string, vendorId: string) => Promise<void>
   getSelectedRfq: () => RFQ | undefined
   getFilteredRfqs: () => RFQ[]
 }
