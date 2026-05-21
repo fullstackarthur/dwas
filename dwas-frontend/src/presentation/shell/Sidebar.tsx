@@ -163,12 +163,22 @@ export const Sidebar = memo(function Sidebar() {
             >
               <span>Operations</span>
               <div className="flex items-center gap-1">
-                <button className="p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-colors">
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                  className="p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-colors cursor-pointer"
+                >
                   <FiPlus className="w-3.5 h-3.5" />
-                </button>
-                <button className="p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-colors">
+                </div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                  className="p-0.5 text-text-muted hover:text-text-primary hover:bg-hover-surface rounded transition-colors cursor-pointer"
+                >
                   <FiMoreHorizontal className="w-3.5 h-3.5" />
-                </button>
+                </div>
                 {projectsExpanded ? (
                   <FiChevronDown className="w-3.5 h-3.5 text-text-muted" />
                 ) : (
