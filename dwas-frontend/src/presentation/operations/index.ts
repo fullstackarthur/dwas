@@ -1,0 +1,8 @@
+export { RFQDeskPage } from './RFQDeskPage'
+export { VendorCoordinationPage } from './VendorCoordinationPage'
+export { ClientQuotationsPage } from './ClientQuotationsPage'
+export { PurchaseOrdersPage } from './PurchaseOrdersPage'
+export { LogisticsPage } from './LogisticsPage'
+export { DispatchTrackingPage } from './DispatchTrackingPage'
+export { DeliveriesPage } from './DeliveriesPage'
+export { PaymentsTallyPage } from './PaymentsTallyPage'

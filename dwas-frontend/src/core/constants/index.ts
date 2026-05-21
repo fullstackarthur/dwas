@@ -12,6 +12,16 @@ export const ROUTES = {
   AI_ASSISTANT: '/ai',
   NOTIFICATIONS: '/notifications',
   SETTINGS: '/settings',
+  OPERATIONS: {
+    RFQ_DESK: '/operations/rfq-desk',
+    VENDOR_COORDINATION: '/operations/vendor-coordination',
+    CLIENT_QUOTATIONS: '/operations/client-quotations',
+    PURCHASE_ORDERS: '/operations/purchase-orders',
+    LOGISTICS: '/operations/logistics',
+    DISPATCH_TRACKING: '/operations/dispatch-tracking',
+    DELIVERIES: '/operations/deliveries',
+    PAYMENTS_TALLY: '/operations/payments-tally',
+  },
 } as const
 
 export const QUEUE_LABELS: Record<string, string> = {

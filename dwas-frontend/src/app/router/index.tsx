@@ -16,6 +16,16 @@ import { DriverUpdateQueue } from '../../presentation/queues/DriverUpdateQueue'
 import { AIReviewQueue } from '../../presentation/queues/AIReviewQueue'
 import { NotificationPage } from '../../presentation/notifications/NotificationPage'
 import { CollaborationPage } from '../../presentation/collaboration/CollaborationPage'
+import {
+  RFQDeskPage,
+  VendorCoordinationPage,
+  ClientQuotationsPage,
+  PurchaseOrdersPage,
+  LogisticsPage,
+  DispatchTrackingPage,
+  DeliveriesPage,
+  PaymentsTallyPage,
+} from '../../presentation/operations'
 import { ROUTES } from '../../core/constants'
 
 const ShellLayout = () => (
@@ -103,6 +113,38 @@ export const router = createBrowserRouter([
       {
         path: '/collaboration',
         element: <CollaborationPage />,
+      },
+      {
+        path: ROUTES.OPERATIONS.RFQ_DESK,
+        element: <RFQDeskPage />,
+      },
+      {
+        path: ROUTES.OPERATIONS.VENDOR_COORDINATION,
+        element: <VendorCoordinationPage />,
+      },
+      {
+        path: ROUTES.OPERATIONS.CLIENT_QUOTATIONS,
+        element: <ClientQuotationsPage />,
+      },
+      {
+        path: ROUTES.OPERATIONS.PURCHASE_ORDERS,
+        element: <PurchaseOrdersPage />,
+      },
+      {
+        path: ROUTES.OPERATIONS.LOGISTICS,
+        element: <LogisticsPage />,
+      },
+      {
+        path: ROUTES.OPERATIONS.DISPATCH_TRACKING,
+        element: <DispatchTrackingPage />,
+      },
+      {
+        path: ROUTES.OPERATIONS.DELIVERIES,
+        element: <DeliveriesPage />,
+      },
+      {
+        path: ROUTES.OPERATIONS.PAYMENTS_TALLY,
+        element: <PaymentsTallyPage />,
       },
       {
         path: ROUTES.SETTINGS,

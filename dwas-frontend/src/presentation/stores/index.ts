@@ -1,6 +1,9 @@
 import { create } from 'zustand'
 import type { User, QueueItem, Thread, Notification, AIRecommendation, BreadcrumbItem } from '../../core/types'
 import { mockUsers, mockQueueItems, mockThreads, mockNotifications, mockAIRecommendations, mockDashboardMetrics } from '../../data/mock'
+import { useRFQDeskStore } from './rfqStore'
+
+export { useRFQDeskStore }
 
 interface UIState {
   sidebarCollapsed: boolean

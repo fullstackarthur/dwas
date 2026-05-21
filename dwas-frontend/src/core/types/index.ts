@@ -147,19 +147,21 @@ export type PanelType =
   | 'settings'
 
 export type {
-  VendorResponse,
-  ApprovalRequest,
-  DispatchRecord,
-  TransportRecord,
-  OperationalEvent,
-  WorkloadEntry,
-  OperationalHealthMetric,
-  EscalationRecord,
-  TallyRecord,
-  DriverUpdate,
-  RFQRecord,
-  InboxItem,
-} from './operational'
+  RFQ,
+  RFQItem,
+  RFQStage,
+  RFQPriority,
+  SLAStatus,
+  AIVendorMatchConfidence,
+  VendorQuote,
+  RFQTimelineEvent,
+  RFQDocument,
+  AIVendorRecommendation,
+  RFQRequirement,
+  RFQFilter,
+  RFQDeskState,
+  OperationalFilterOption,
+} from './rfq'
 
 export type {
   TimelineEvent,
