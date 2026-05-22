@@ -131,6 +131,7 @@ export interface RFQ {
   clientEmail?: string
   items: RFQItem[]
   totalQuantity: number
+  totalItems: number
   priority: RFQPriority
   stage: RFQStage
   status: 'open' | 'in_progress' | 'awaiting_response' | 'quoted' | 'won' | 'lost' | 'cancelled'

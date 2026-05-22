@@ -31,6 +31,7 @@ export const RFQWorkspaceHeader = memo(function RFQWorkspaceHeader({
   const stageInfo = RFQStages.find((s) => s.id === rfq.stage)
   const qtyDisplay = rfq.totalQuantity >= 1000 ? `${(rfq.totalQuantity / 1000).toFixed(1)}K` : rfq.totalQuantity
   const hasClient = Boolean(rfq.clientName)
+  const itemCount = rfq.items.length > 0 ? rfq.items.length : rfq.totalItems
 
   return (
     <div className="px-4 py-3 bg-bg-secondary border-b border-border-panel flex-shrink-0">
@@ -109,7 +110,7 @@ export const RFQWorkspaceHeader = memo(function RFQWorkspaceHeader({
             {qtyDisplay} <span className="text-[12px] font-normal text-text-muted">units</span>
           </div>
           <div className="text-[12px] text-text-muted mt-1">
-            {rfq.items.length} item{rfq.items.length !== 1 ? 's' : ''}
+            {itemCount} item{itemCount !== 1 ? 's' : ''}
           </div>
         </div>
       </div>

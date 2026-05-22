@@ -1,114 +1,97 @@
-import { memo, useState, useRef, useEffect } from 'react'
+import { memo, useRef, useEffect, useCallback } from 'react'
 import clsx from 'clsx'
 import { FiSearch, FiX } from 'react-icons/fi'
 import { useRFQDeskStore } from '../../stores'
-import { motion, AnimatePresence } from 'framer-motion'
 
 export const RFQGlobalSearch = memo(function RFQGlobalSearch() {
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
-  const { rfqs, selectRfq } = useRFQDeskStore()
+  const filters = useRFQDeskStore((s) => s.filters)
+  const setFilters = useRFQDeskStore((s) => s.setFilters)
+  const clearFilters = useRFQDeskStore((s) => s.clearFilters)
+  const rfqs = useRFQDeskStore((s) => s.rfqs)
 
+  const query = filters.searchQuery ?? ''
+  const isActive = query.length > 0
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFilters({ searchQuery: e.target.value })
+    },
+    [setFilters]
+  )
+
+  const handleClear = useCallback(() => {
+    setFilters({ searchQuery: '' })
+    inputRef.current?.focus()
+  }, [setFilters])
+
+  // Keyboard shortcut: / to focus search
   useEffect(() => {
-    if (open && inputRef.current) {
-      inputRef.current.focus()
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        e.preventDefault()
+        inputRef.current?.focus()
+      }
+      if (e.key === 'Escape' && document.activeElement === inputRef.current) {
+        handleClear()
+        inputRef.current?.blur()
+      }
     }
-  }, [open])
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [handleClear])
 
-  const results = query.length > 0
-    ? rfqs
-        .filter(
-          (r) =>
-            r.rfqNumber.toLowerCase().includes(query.toLowerCase()) ||
-            r.clientName.toLowerCase().includes(query.toLowerCase()) ||
-            r.items.some((i) => i.materialDescription.toLowerCase().includes(query.toLowerCase()))
+  // Count matching results for feedback
+  const matchCount = isActive
+    ? rfqs.filter((r) => {
+        const q = query.toLowerCase()
+        return (
+          r.rfqNumber.toLowerCase().includes(q) ||
+          r.clientName.toLowerCase().includes(q) ||
+          r.deliveryLocation.toLowerCase().includes(q) ||
+          r.items.some((i) => i.materialDescription.toLowerCase().includes(q))
         )
-        .slice(0, 6)
-    : []
-
-  const handleSelect = (rfqId: string) => {
-    selectRfq(rfqId)
-    setQuery('')
-    setOpen(false)
-  }
+      }).length
+    : rfqs.length
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center gap-2">
       <div
         className={clsx(
-          'flex items-center gap-2 h-8 rounded-md border transition-colors duration-120 bg-bg-tertiary',
-          open ? 'w-80 border-active-blue' : 'w-56 border-border-panel'
+          'flex items-center gap-2 h-8 rounded-md border transition-all duration-150 bg-bg-tertiary',
+          isActive
+            ? 'w-72 border-active-blue shadow-[0_0_0_2px_rgba(0,82,204,0.12)]'
+            : 'w-56 border-border-panel hover:border-text-muted'
         )}
       >
-        <FiSearch className="w-4 h-4 text-text-muted ml-2" />
+        <FiSearch className={clsx('w-3.5 h-3.5 ml-2.5 flex-shrink-0 transition-colors', isActive ? 'text-active-blue' : 'text-text-muted')} />
         <input
           ref={inputRef}
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => setOpen(true)}
-          placeholder="Search RFQs..."
-          className="flex-1 bg-transparent text-[13px] text-text-primary placeholder:text-text-muted outline-none"
+          onChange={handleChange}
+          placeholder="Search RFQs…"
+          className="flex-1 bg-transparent text-[13px] text-text-primary placeholder:text-text-muted outline-none min-w-0"
         />
-        {query && (
-          <button
-            onClick={() => setQuery('')}
-            className="p-1 text-text-muted hover:text-text-primary"
-          >
-            <FiX className="w-3 h-3" />
-          </button>
+        {isActive ? (
+          <div className="flex items-center gap-1.5 pr-1.5">
+            <span className="text-[10px] text-text-muted tabular-nums whitespace-nowrap">
+              {matchCount} result{matchCount !== 1 ? 's' : ''}
+            </span>
+            <button
+              onClick={handleClear}
+              className="p-0.5 rounded text-text-muted hover:text-text-primary hover:bg-hover-surface transition-colors"
+              title="Clear search (Esc)"
+            >
+              <FiX className="w-3 h-3" />
+            </button>
+          </div>
+        ) : (
+          <span className="text-[10px] text-text-muted mr-2 border border-border-panel rounded px-1 hidden sm:inline-block">
+            /
+          </span>
         )}
       </div>
-
-      <AnimatePresence>
-        {open && results.length > 0 && (
-          <>
-            <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-            <motion.div
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              className="absolute top-full left-0 mt-1 w-96 bg-bg-secondary border border-border-panel rounded-md shadow-lg z-20 overflow-hidden"
-            >
-              <div className="p-2">
-                {results.map((rfq) => (
-                  <button
-                    key={rfq.id}
-                    onClick={() => handleSelect(rfq.id)}
-                    className="w-full flex items-start gap-3 p-2 rounded hover:bg-hover-surface text-left"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[13px] font-medium text-text-primary">
-                          {rfq.rfqNumber}
-                        </span>
-                        <span
-                          className={clsx(
-                            'text-[10px] px-1.5 py-0.5 rounded',
-                            rfq.priority === 'critical' && 'bg-error-red/15 text-error-red',
-                            rfq.priority === 'high' && 'bg-warning-yellow/15 text-warning-yellow',
-                            rfq.priority === 'medium' && 'bg-active-blue/15 text-active-blue',
-                            rfq.priority === 'low' && 'bg-text-muted/15 text-text-muted'
-                          )}
-                        >
-                          {rfq.priority}
-                        </span>
-                      </div>
-                      <div className="text-[12px] text-text-secondary truncate">
-                        {rfq.clientName}
-                      </div>
-                      <div className="text-[11px] text-text-muted truncate">
-                        {rfq.items.map((i) => i.materialDescription).join(', ')}
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
   )
 })

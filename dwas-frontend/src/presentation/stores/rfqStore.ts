@@ -192,12 +192,14 @@ export const useRFQDeskStore = create<RFQDeskStore>((set, get) => ({
       if (filters.assigneeId && rfq.assignee?.id !== filters.assigneeId) return false
       if (filters.slaStatus?.length && !filters.slaStatus.includes(rfq.slaStatus)) return false
       if (filters.searchQuery) {
-        const query = filters.searchQuery.toLowerCase()
-        if (
-          !rfq.rfqNumber.toLowerCase().includes(query) &&
-          !rfq.clientName.toLowerCase().includes(query) &&
-          !rfq.items.some((i) => i.materialDescription.toLowerCase().includes(query))
-        ) {
+        const query = filters.searchQuery.toLowerCase().trim()
+        if (!query) return true
+        const matchesRfqNumber = rfq.rfqNumber.toLowerCase().includes(query)
+        const matchesClient = rfq.clientName.toLowerCase().includes(query)
+        const matchesLocation = rfq.deliveryLocation.toLowerCase().includes(query)
+        const matchesItems = rfq.items.some((i) => i.materialDescription.toLowerCase().includes(query))
+        const matchesTags = rfq.tags.some((t) => t.toLowerCase().includes(query))
+        if (!matchesRfqNumber && !matchesClient && !matchesLocation && !matchesItems && !matchesTags) {
           return false
         }
       }
