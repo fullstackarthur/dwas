@@ -1,8 +1,9 @@
 import { memo } from 'react'
-import { mockOperationalHealth } from '../../data/mock/operational'
 import type { OperationalHealthMetric } from '../../core/types'
 import { FiCheckCircle, FiAlertTriangle, FiXCircle } from 'react-icons/fi'
 import clsx from 'clsx'
+
+const mockOperationalHealth: OperationalHealthMetric[] = []
 
 function HealthRow({ metric }: { metric: OperationalHealthMetric }) {
   const statusConfig: Record<string, { color: string; icon: React.ComponentType<{ className?: string }>; bg: string }> = {

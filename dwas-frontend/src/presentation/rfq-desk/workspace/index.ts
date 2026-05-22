@@ -1,5 +1,8 @@
 export { RFQWorkspace } from './RFQWorkspace'
 export { RFQWorkspaceHeader } from './RFQWorkspaceHeader'
+export { ClientDetailsBanner } from './ClientDetailsBanner'
+export { ClientDetailsEditorPanel } from './ClientDetailsEditorPanel'
+
 export { OperationalTimeline } from './OperationalTimeline'
 export { TimelineEventCard } from './TimelineEventCard'
 export { ExtractedRequirementsPanel } from './ExtractedRequirementsPanel'

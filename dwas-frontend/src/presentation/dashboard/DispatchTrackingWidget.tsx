@@ -1,8 +1,9 @@
 import { memo } from 'react'
 import { FiTruck, FiMapPin, FiClock, FiAlertTriangle, FiCheckCircle, FiLoader } from 'react-icons/fi'
 import clsx from 'clsx'
-import { mockDispatchRecords } from '../../data/mock/operational'
 import type { DispatchRecord } from '../../core/types'
+
+const mockDispatchRecords: DispatchRecord[] = []
 
 function DispatchRow({ record }: { record: DispatchRecord }) {
   const statusConfig: Record<string, { color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {

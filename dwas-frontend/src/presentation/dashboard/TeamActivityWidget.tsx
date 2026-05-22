@@ -1,7 +1,8 @@
 import { memo } from 'react'
-import { mockWorkloadEntries } from '../../data/mock/operational'
 import type { WorkloadEntry } from '../../core/types'
 import clsx from 'clsx'
+
+const mockWorkloadEntries: WorkloadEntry[] = []
 
 function TeamMemberRow({ entry }: { entry: WorkloadEntry }) {
   const statusColors: Record<string, string> = {

@@ -1,8 +1,9 @@
 import { memo } from 'react'
-import { mockEscalationRecords } from '../../data/mock/operational'
 import type { EscalationRecord } from '../../core/types'
 import { FiAlertTriangle, FiClock, FiCheckCircle } from 'react-icons/fi'
 import clsx from 'clsx'
+
+const mockEscalationRecords: EscalationRecord[] = []
 
 function EscalationRow({ record }: { record: EscalationRecord }) {
   const statusConfig: Record<string, { color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {

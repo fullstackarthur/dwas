@@ -1,6 +1,5 @@
 import { create } from 'zustand'
-import type { RFQDeskState } from '../../core/types/rfq'
-import { mockRFQs } from '../../data/mock/rfq'
+import type { RFQDeskState, ClientDetails } from '../../core/types/rfq'
 import { rfqRepository } from '../../data/repositories/SupabaseRFQRepository'
 
 interface RFQDeskStore extends RFQDeskState {
@@ -157,6 +156,28 @@ export const useRFQDeskStore = create<RFQDeskStore>((set, get) => ({
     }
   },
 
+  updateClientDetails: async (rfqId, data: ClientDetails) => {
+    // Optimistic update
+    set((s) => ({
+      rfqs: s.rfqs.map((r) =>
+        r.id === rfqId
+          ? { ...r, clientName: data.name, clientContact: data.contactName, clientEmail: data.email }
+          : r
+      ),
+    }))
+    try {
+      const result = await rfqRepository.upsertClient(rfqId, data)
+      set((s) => ({
+        rfqs: s.rfqs.map((r) =>
+          r.id === rfqId ? { ...r, clientId: result.clientId, clientName: result.clientName } : r
+        ),
+      }))
+    } catch (e) {
+      console.error('[rfqStore] updateClientDetails failed:', e)
+      get().fetchRfqDetail(rfqId)
+    }
+  },
+
   getSelectedRfq: () => {
     const { rfqs, selectedRfqId } = get()
     return rfqs.find((r) => r.id === selectedRfqId)
@@ -191,9 +212,9 @@ export const useRFQDeskStore = create<RFQDeskStore>((set, get) => ({
       set({ rfqs, loading: false, error: null })
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Failed to fetch RFQs'
-      console.error('[rfqStore] fetchRfqs failed, falling back to mock:', e)
+      console.error('[rfqStore] fetchRfqs failed:', e)
       set({
-        rfqs: mockRFQs,
+        rfqs: [],
         loading: false,
         error: message,
       })

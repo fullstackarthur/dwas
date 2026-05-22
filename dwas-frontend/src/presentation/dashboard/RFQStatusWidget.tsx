@@ -1,8 +1,9 @@
 import { memo } from 'react'
 import { FiClock, FiCheckCircle, FiXCircle, FiAlertTriangle } from 'react-icons/fi'
 import clsx from 'clsx'
-import { mockRFQRecords } from '../../data/mock/operational'
 import type { RFQRecord } from '../../core/types'
+
+const mockRFQRecords: RFQRecord[] = []
 
 function RFQRow({ rfq }: { rfq: RFQRecord }) {
   const statusConfig: Record<string, { color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {

@@ -1,6 +1,7 @@
 import { memo } from 'react'
-import { mockWorkloadEntries } from '../../data/mock/operational'
 import clsx from 'clsx'
+
+const mockWorkloadEntries: { userId: string; userName: string; activeItems: number; completedToday: number; overdueItems: number }[] = []
 
 export const WorkloadDistributionWidget = memo(function WorkloadDistributionWidget() {
   const totalActive = mockWorkloadEntries.reduce((sum, e) => sum + e.activeItems, 0)

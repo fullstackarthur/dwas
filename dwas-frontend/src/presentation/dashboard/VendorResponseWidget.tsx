@@ -1,8 +1,9 @@
 import { memo } from 'react'
 import { FiClock, FiCheckCircle, FiAlertTriangle, FiXCircle } from 'react-icons/fi'
 import clsx from 'clsx'
-import { mockVendorResponses } from '../../data/mock/operational'
 import type { VendorResponse } from '../../core/types'
+
+const mockVendorResponses: VendorResponse[] = []
 
 function VendorResponseRow({ response }: { response: VendorResponse }) {
   const statusConfig: Record<string, { color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {

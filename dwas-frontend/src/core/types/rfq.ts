@@ -16,6 +16,14 @@ export type RFQStage =
 
 export type RFQPriority = 'critical' | 'high' | 'medium' | 'low'
 
+export interface ClientDetails {
+  name: string
+  contactName?: string
+  email?: string
+  phone?: string
+  city?: string
+}
+
 export type SLAStatus = 'on_track' | 'at_risk' | 'breached' | 'no_sla'
 
 export type AIVendorMatchConfidence = 'high' | 'medium' | 'low'
@@ -117,6 +125,7 @@ export interface RFQRequirement {
 export interface RFQ {
   id: string
   rfqNumber: string
+  clientId?: string
   clientName: string
   clientContact?: string
   clientEmail?: string
@@ -181,6 +190,7 @@ export interface RFQDeskState {
   acceptQuote: (rfqId: string, quoteId: string) => Promise<void>
   rejectQuote: (rfqId: string, quoteId: string) => Promise<void>
   sendToVendor: (rfqId: string, vendorId: string) => Promise<void>
+  updateClientDetails: (rfqId: string, data: ClientDetails) => Promise<void>
   getSelectedRfq: () => RFQ | undefined
   getFilteredRfqs: () => RFQ[]
 }

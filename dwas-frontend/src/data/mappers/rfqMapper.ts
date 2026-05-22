@@ -169,6 +169,7 @@ export function mapCompleteRfqJsonToRFQ(
   return {
     id: (json.id as string) || '',
     rfqNumber: (json.rfqNumber as string) || (json.rfq_number as string) || '',
+    clientId: (json.clientId as string) || (json.client_id as string) || undefined,
     clientName: (json.clientName as string) || '',
     clientContact: (json.clientContact as string) || undefined,
     clientEmail: (json.clientEmail as string) || undefined,
@@ -206,7 +207,8 @@ export function mapRfqSummaryRowToRFQ(row: Record<string, unknown>): RFQ {
   return {
     id: row.id as string,
     rfqNumber: row.rfq_number as string,
-    clientName: row.client_name as string,
+    clientId: row.client_id as string | undefined,
+    clientName: (row.client_name as string) || '',
     clientContact: undefined,
     clientEmail: undefined,
     items: [],
