@@ -1,8 +1,9 @@
 import { memo } from 'react'
 import { FiClock, FiDollarSign, FiTruck, FiFileText, FiNavigation } from 'react-icons/fi'
 import clsx from 'clsx'
-import { mockApprovalRequests } from '../../data/mock/operational'
 import type { ApprovalRequest } from '../../core/types'
+
+const mockApprovalRequests: ApprovalRequest[] = []
 
 function ApprovalRow({ approval }: { approval: ApprovalRequest }) {
   const typeIcons: Record<string, React.ComponentType<{ className?: string }>> = {

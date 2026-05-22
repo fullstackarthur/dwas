@@ -1,6 +1,7 @@
 import { memo } from 'react'
-import { mockDispatchRecords } from '../../data/mock/operational'
 import { FiAlertTriangle, FiClock } from 'react-icons/fi'
+
+const mockDispatchRecords: { id: string; poNumber: string; destination: string; status: string; delayReason?: string }[] = []
 
 export const DelayedOperationsWidget = memo(function DelayedOperationsWidget() {
   const delayed = mockDispatchRecords.filter((d) => d.status === 'delayed')

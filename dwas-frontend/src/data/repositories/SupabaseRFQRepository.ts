@@ -56,6 +56,7 @@ export interface RFQRepository {
   acceptQuote(rfqId: string, quoteId: string): Promise<void>
   rejectQuote(rfqId: string, quoteId: string): Promise<void>
   sendToVendor(rfqId: string, vendorId: string): Promise<void>
+  upsertClient(rfqId: string, clientData: { name: string; contactName?: string; email?: string; phone?: string; city?: string }): Promise<{ clientId: string; clientName: string }>
   createTimelineEvent(rfqId: string, eventType: string, title: string, description?: string, metadata?: Record<string, unknown>): Promise<void>
   subscribeToRfqChanges(callback: (rfqs: RFQ[]) => void): () => void
 }
@@ -183,6 +184,7 @@ export class SupabaseRFQRepository implements RFQRepository {
 
     return {
       id: rfqData.id,
+      client_id: rfqData.client_id,
       rfqNumber: rfqData.rfq_number,
       clientName: client?.name,
       clientContact: client?.contact_name,
@@ -402,6 +404,78 @@ export class SupabaseRFQRepository implements RFQRepository {
       `RFQ sent to vendor ${vendorId} for quotation`,
       { vendorId }
     )
+  }
+
+  async upsertClient(
+    rfqId: string,
+    clientData: { name: string; contactName?: string; email?: string; phone?: string; city?: string }
+  ): Promise<{ clientId: string; clientName: string }> {
+    const { data: rfqRow } = await supabase
+      .from('rfqs')
+      .select('client_id')
+      .eq('id', rfqId)
+      .single()
+
+    const existingClientId = rfqRow?.client_id
+
+    if (existingClientId) {
+      const { error } = await supabase
+        .from('clients')
+        .update({
+          name: clientData.name,
+          contact_name: clientData.contactName || null,
+          email: clientData.email || null,
+          phone: clientData.phone || null,
+          city: clientData.city || null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingClientId)
+
+      if (error) {
+        console.error('[SupabaseRFQRepository] upsertClient update error:', error)
+        throw error
+      }
+
+      await this.createTimelineEvent(rfqId, 'human', 'Client details updated', `Client "${clientData.name}" details updated`)
+      return { clientId: existingClientId, clientName: clientData.name }
+    } else {
+      const { data: newClient, error: insertError } = await supabase
+        .from('clients')
+        .insert({
+          name: clientData.name,
+          contact_name: clientData.contactName || null,
+          email: clientData.email || null,
+          phone: clientData.phone || null,
+          city: clientData.city || null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .select('id')
+        .single()
+
+      if (insertError || !newClient) {
+        console.error('[SupabaseRFQRepository] upsertClient insert error:', insertError)
+        throw insertError || new Error('Failed to create client')
+      }
+
+      const { error: linkError } = await supabase
+        .from('rfqs')
+        .update({ client_id: newClient.id, updated_at: new Date().toISOString() })
+        .eq('id', rfqId)
+
+      if (linkError) {
+        console.error('[SupabaseRFQRepository] upsertClient link error:', linkError)
+        throw linkError
+      }
+
+      await this.createTimelineEvent(
+        rfqId, 'human', 'Client details added',
+        `Client "${clientData.name}" linked to RFQ`,
+        { clientId: newClient.id }
+      )
+
+      return { clientId: newClient.id, clientName: clientData.name }
+    }
   }
 
   async createTimelineEvent(

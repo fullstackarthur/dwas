@@ -1,8 +1,9 @@
 import { memo } from 'react'
-import { mockDriverUpdates } from '../../data/mock/operational'
 import type { DriverUpdate } from '../../core/types'
 import { FiMapPin, FiAlertTriangle, FiCheckCircle, FiArrowRight } from 'react-icons/fi'
 import clsx from 'clsx'
+
+const mockDriverUpdates: DriverUpdate[] = []
 
 function DriverUpdateRow({ update }: { update: DriverUpdate }) {
   const typeConfig: Record<string, { color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {

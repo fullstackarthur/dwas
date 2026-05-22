@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import type { User, QueueType } from '../../core/types'
-import { mockUsers } from '../../data/mock'
 
 interface OperationalNotification {
   id: string
@@ -38,135 +37,15 @@ interface AuditEntry {
   details?: string
 }
 
-export const mockOperationalNotifications: OperationalNotification[] = [
-  {
-    id: 'rn-1',
-    type: 'critical',
-    category: 'dispatch',
-    title: 'Dispatch delayed - PO#48283',
-    message: 'Vehicle breakdown on NH48. Delivery delayed by 6+ hours. Replacement arranged.',
-    createdAt: new Date(Date.now() - 900000).toISOString(),
-    read: false,
-    sourceUser: mockUsers[3],
-    relatedItemId: 'qi-3',
-    relatedQueueType: 'logistics',
-  },
-  {
-    id: 'rn-2',
-    type: 'warning',
-    category: 'sla',
-    title: 'SLA at risk - SAIL quotation',
-    message: 'Response deadline in 4 hours. No response received from SAIL.',
-    createdAt: new Date(Date.now() - 1800000).toISOString(),
-    read: false,
-    relatedQueueType: 'procurement',
-  },
-  {
-    id: 'rn-3',
-    type: 'normal',
-    category: 'assignment',
-    title: 'Assigned to you - PO#48295 dispatch',
-    message: 'GI Pipe dispatch to Essar Surat has been assigned to you.',
-    createdAt: new Date(Date.now() - 3600000).toISOString(),
-    read: false,
-    sourceUser: mockUsers[1],
-    relatedItemId: 'qi-9',
-    relatedQueueType: 'dispatch',
-  },
-  {
-    id: 'rn-4',
-    type: 'normal',
-    category: 'approval',
-    title: 'Approval requested - Re-route SH-9921',
-    message: 'Priya Sharma has requested your approval for shipment re-route.',
-    createdAt: new Date(Date.now() - 7200000).toISOString(),
-    read: true,
-    sourceUser: mockUsers[1],
-    relatedQueueType: 'logistics',
-  },
-  {
-    id: 'rn-5',
-    type: 'low',
-    category: 'ai',
-    title: 'AI review completed - PO#48287',
-    message: 'Dispatch documentation validated. All fields complete.',
-    createdAt: new Date(Date.now() - 10800000).toISOString(),
-    read: true,
-    relatedQueueType: 'ai_review',
-  },
-  {
-    id: 'rn-6',
-    type: 'warning',
-    category: 'escalation',
-    title: 'Escalation raised - Essar payment',
-    message: 'Payment escalation raised. 18.4L overdue by 12 days.',
-    createdAt: new Date(Date.now() - 14400000).toISOString(),
-    read: true,
-    sourceUser: mockUsers[1],
-    relatedQueueType: 'escalations',
-  },
-  {
-    id: 'rn-7',
-    type: 'low',
-    category: 'system',
-    title: 'Queue sync completed',
-    message: 'All operational queues synchronized. 8 active items.',
-    createdAt: new Date(Date.now() - 1800000).toISOString(),
-    read: false,
-  },
-  {
-    id: 'rn-8',
-    type: 'normal',
-    category: 'vendor',
-    title: 'Vendor response received - JSW Steel',
-    message: 'JSW Steel submitted quotation for HRC November contract.',
-    createdAt: new Date(Date.now() - 21600000).toISOString(),
-    read: true,
-    relatedQueueType: 'procurement',
-  },
-]
 
-export const mockAssignmentEvents: AssignmentEvent[] = [
-  {
-    id: 'ae-1',
-    itemId: 'qi-1',
-    itemTitle: 'Steel coil dispatch - PO#48291',
-    assignedBy: mockUsers[0],
-    assignedTo: mockUsers[1],
-    queueType: 'dispatch',
-    timestamp: new Date(Date.now() - 7200000).toISOString(),
-    reason: 'Transport coordination required',
-  },
-  {
-    id: 'ae-2',
-    itemId: 'qi-3',
-    itemTitle: 'Transport allocation - Vizag port',
-    assignedBy: mockUsers[1],
-    assignedTo: mockUsers[3],
-    queueType: 'logistics',
-    timestamp: new Date(Date.now() - 14400000).toISOString(),
-  },
-  {
-    id: 'ae-3',
-    itemId: 'qi-6',
-    itemTitle: 'Escalation - Essar payment',
-    assignedBy: mockUsers[1],
-    assignedTo: mockUsers[0],
-    queueType: 'escalations',
-    timestamp: new Date(Date.now() - 10800000).toISOString(),
-    reason: 'Management approval required',
-  },
-]
 
-export const mockAuditEntries: AuditEntry[] = [
-  { id: 'au-1', action: 'Status changed', actor: mockUsers[1], target: 'PO#48291 dispatch', targetType: 'queue_item', timestamp: new Date(Date.now() - 3600000).toISOString(), oldValue: 'in_progress', newValue: 'in_transit' },
-  { id: 'au-2', action: 'Priority changed', actor: mockUsers[0], target: 'Essar escalation', targetType: 'queue_item', timestamp: new Date(Date.now() - 10800000).toISOString(), oldValue: 'high', newValue: 'critical' },
-  { id: 'au-3', action: 'Approval granted', actor: mockUsers[0], target: 'PO#48291 dispatch', targetType: 'approval', timestamp: new Date(Date.now() - 6500000).toISOString(), details: 'Dispatch approval granted' },
-  { id: 'au-4', action: 'Assigned', actor: mockUsers[0], target: 'PO#48291 dispatch', targetType: 'queue_item', timestamp: new Date(Date.now() - 7200000).toISOString(), oldValue: 'Unassigned', newValue: 'Priya Sharma' },
-  { id: 'au-5', action: 'Created', actor: mockUsers[2], target: 'PO#48291 procurement request', targetType: 'queue_item', timestamp: new Date(Date.now() - 7200000).toISOString() },
-  { id: 'au-6', action: 'Comment added', actor: mockUsers[5], target: 'PO#48291 thread', targetType: 'thread', timestamp: new Date(Date.now() - 3600000).toISOString(), details: 'AI review completed' },
-  { id: 'au-7', action: 'Document uploaded', actor: mockUsers[1], target: 'Gate pass GP-48291-001', targetType: 'dispatch', timestamp: new Date(Date.now() - 1800000).toISOString() },
-]
+export const mockOperationalNotifications: OperationalNotification[] = []
+
+
+
+export const mockAssignmentEvents: AssignmentEvent[] = []
+
+export const mockAuditEntries: AuditEntry[] = []
 
 interface NotificationStore {
   notifications: OperationalNotification[]

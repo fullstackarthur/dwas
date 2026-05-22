@@ -1,8 +1,9 @@
 import { memo } from 'react'
-import { mockOperationalEvents } from '../../data/mock/operational'
 import type { OperationalEvent } from '../../core/types'
 import { FiTruck, FiPackage, FiAlertTriangle, FiClock, FiCpu, FiSettings } from 'react-icons/fi'
 import clsx from 'clsx'
+
+const mockOperationalEvents: OperationalEvent[] = []
 
 function EventRow({ event }: { event: OperationalEvent }) {
   const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {

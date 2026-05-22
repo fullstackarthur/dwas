@@ -41,8 +41,36 @@ export const QueueFilterToolbar = memo(function QueueFilterToolbar({
 import { memo as memo2, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiChevronDown } from 'react-icons/fi'
-import { mockRFQStages, mockRFQPriorities, mockSLABreached } from '../../../data/mock/rfq'
 import { useRFQDeskStore } from '../../stores'
+
+const RFQStages = [
+  { id: 'new', label: 'New', color: '#6B778C' },
+  { id: 'requirements_extraction', label: 'Requirements Extraction', color: '#8B5CF6' },
+  { id: 'vendor_sourcing', label: 'Vendor Sourcing', color: '#3B82F6' },
+  { id: 'vendor_coordination', label: 'Vendor Coordination', color: '#F59E0B' },
+  { id: 'quotation_received', label: 'Quotation Received', color: '#EF4444' },
+  { id: 'quotation_review', label: 'Quotation Review', color: '#10B981' },
+  { id: 'client_presentation', label: 'Client Presentation', color: '#6366F1' },
+  { id: 'negotiation', label: 'Negotiation', color: '#EC4899' },
+  { id: 'order_confirmation', label: 'Order Confirmation', color: '#14B8A6' },
+  { id: 'po_generated', label: 'PO Generated', color: '#8B5CF6' },
+  { id: 'closed', label: 'Closed', color: '#94A3B8' },
+  { id: 'cancelled', label: 'Cancelled', color: '#6B7280' },
+] as const
+
+const RFQPriorities = [
+  { id: 'critical', label: 'Critical', color: '#EF4444' },
+  { id: 'high', label: 'High', color: '#F59E0B' },
+  { id: 'medium', label: 'Medium', color: '#3B82F6' },
+  { id: 'low', label: 'Low', color: '#94A3B8' },
+] as const
+
+const SLABreached = [
+  { id: 'on_track', label: 'On Track', color: '#22C55E' },
+  { id: 'at_risk', label: 'At Risk', color: '#F59E0B' },
+  { id: 'breached', label: 'Breached', color: '#EF4444' },
+  { id: 'no_sla', label: 'No SLA', color: '#94A3B8' },
+] as const
 
 const OperationalFilterDropdown = memo2(function OperationalFilterDropdown() {
   const [open, setOpen] = useState(false)
@@ -76,7 +104,7 @@ const OperationalFilterDropdown = memo2(function OperationalFilterDropdown() {
             >
               <div className="p-2">
                 <div className="text-[11px] font-semibold text-text-muted px-2 py-1">STAGE</div>
-                {mockRFQStages.map((stage) => (
+                {RFQStages.map((stage) => (
                   <FilterCheckbox
                     key={stage.id}
                     label={stage.label}
@@ -132,7 +160,7 @@ const PriorityFilterControl = memo2(function PriorityFilterControl() {
             >
               <div className="p-2">
                 <div className="text-[11px] font-semibold text-text-muted px-2 py-1">PRIORITY</div>
-                {mockRFQPriorities.map((p) => (
+                {RFQPriorities.map((p) => (
                   <FilterCheckbox
                     key={p.id}
                     label={p.label}
@@ -188,7 +216,7 @@ const SLAFilterControl = memo2(function SLAFilterControl() {
             >
               <div className="p-2">
                 <div className="text-[11px] font-semibold text-text-muted px-2 py-1">SLA STATUS</div>
-                {mockSLABreached.map((s) => (
+                {SLABreached.map((s) => (
                   <FilterCheckbox
                     key={s.id}
                     label={s.label}

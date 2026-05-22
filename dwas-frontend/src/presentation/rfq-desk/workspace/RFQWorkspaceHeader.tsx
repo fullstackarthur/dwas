@@ -1,19 +1,37 @@
 import { memo } from 'react'
 import clsx from 'clsx'
 import type { RFQ } from '../../../core/types/rfq'
-import { mockRFQStages } from '../../../data/mock/rfq'
 import { formatDistanceToNow } from '../../../core/utils'
-import { FiUser, FiClock, FiMapPin } from 'react-icons/fi'
+import { FiUser, FiClock, FiMapPin, FiEdit2, FiUserPlus } from 'react-icons/fi'
+
+const RFQStages = [
+  { id: 'new', label: 'New', color: '#6B778C' },
+  { id: 'requirements_extraction', label: 'Requirements Extraction', color: '#8B5CF6' },
+  { id: 'vendor_sourcing', label: 'Vendor Sourcing', color: '#3B82F6' },
+  { id: 'vendor_coordination', label: 'Vendor Coordination', color: '#F59E0B' },
+  { id: 'quotation_received', label: 'Quotation Received', color: '#EF4444' },
+  { id: 'quotation_review', label: 'Quotation Review', color: '#10B981' },
+  { id: 'client_presentation', label: 'Client Presentation', color: '#6366F1' },
+  { id: 'negotiation', label: 'Negotiation', color: '#EC4899' },
+  { id: 'order_confirmation', label: 'Order Confirmation', color: '#14B8A6' },
+  { id: 'po_generated', label: 'PO Generated', color: '#8B5CF6' },
+  { id: 'closed', label: 'Closed', color: '#94A3B8' },
+  { id: 'cancelled', label: 'Cancelled', color: '#6B7280' },
+] as const
 
 interface RFQWorkspaceHeaderProps {
   rfq: RFQ
+  onEditClient: () => void
 }
 
 export const RFQWorkspaceHeader = memo(function RFQWorkspaceHeader({
   rfq,
+  onEditClient,
 }: RFQWorkspaceHeaderProps) {
-  const stageInfo = mockRFQStages.find((s) => s.id === rfq.stage)
+  const stageInfo = RFQStages.find((s) => s.id === rfq.stage)
   const qtyDisplay = rfq.totalQuantity >= 1000 ? `${(rfq.totalQuantity / 1000).toFixed(1)}K` : rfq.totalQuantity
+  const hasClient = Boolean(rfq.clientName)
+  const itemCount = rfq.items.length > 0 ? rfq.items.length : rfq.totalItems
 
   return (
     <div className="px-4 py-3 bg-bg-secondary border-b border-border-panel flex-shrink-0">
@@ -46,8 +64,28 @@ export const RFQWorkspaceHeader = memo(function RFQWorkspaceHeader({
             </span>
           </div>
 
-          <div className="text-[14px] text-text-secondary mt-1">
-            {rfq.clientName}
+          {/* Client row */}
+          <div className="flex items-center gap-1.5 mt-1 group">
+            {hasClient ? (
+              <>
+                <span className="text-[14px] text-text-secondary">{rfq.clientName}</span>
+                <button
+                  onClick={onEditClient}
+                  title="Edit client details"
+                  className="opacity-0 group-hover:opacity-100 p-1 rounded text-text-muted hover:text-active-blue hover:bg-active-blue/10 transition-all duration-120"
+                >
+                  <FiEdit2 className="w-3 h-3" />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={onEditClient}
+                className="flex items-center gap-1.5 text-[12px] text-warning-yellow border border-warning-yellow/30 bg-warning-yellow/8 px-2 py-0.5 rounded hover:bg-warning-yellow/15 transition-colors"
+              >
+                <FiUserPlus className="w-3 h-3" />
+                Add client details
+              </button>
+            )}
           </div>
 
           <div className="flex items-center gap-4 mt-2 text-[12px] text-text-muted">
@@ -72,7 +110,7 @@ export const RFQWorkspaceHeader = memo(function RFQWorkspaceHeader({
             {qtyDisplay} <span className="text-[12px] font-normal text-text-muted">units</span>
           </div>
           <div className="text-[12px] text-text-muted mt-1">
-            {rfq.items.length} item{rfq.items.length !== 1 ? 's' : ''}
+            {itemCount} item{itemCount !== 1 ? 's' : ''}
           </div>
         </div>
       </div>

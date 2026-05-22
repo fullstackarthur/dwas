@@ -24,12 +24,15 @@ export const RFQOperationalRow = memo(function RFQOperationalRow({
     ? formatDistanceToNow(new Date(rfq.lastActivityAt))
     : ''
 
+  // Use loaded items if available, otherwise fall back to totalItems count from the view
+  const itemCount = rfq.items.length > 0 ? rfq.items.length : rfq.totalItems
+
   const itemSummary =
     rfq.items.length === 1
       ? rfq.items[0].materialDescription.substring(0, 25)
       : rfq.items.length === 2
         ? rfq.items.map((i) => i.materialDescription.substring(0, 15)).join(' & ')
-        : `${rfq.items.length} Items`
+        : `${itemCount} Item${itemCount !== 1 ? 's' : ''}`
 
   const totalQty = rfq.totalQuantity
   const qtyDisplay = totalQty >= 1000 ? `${(totalQty / 1000).toFixed(1)}K` : totalQty

@@ -1,6 +1,8 @@
-import { memo } from 'react'
+import { memo, useState, useCallback } from 'react'
 import { useRFQDeskStore } from '../../stores'
 import { RFQWorkspaceHeader } from './RFQWorkspaceHeader'
+import { ClientDetailsBanner } from './ClientDetailsBanner'
+import { ClientDetailsEditorPanel } from './ClientDetailsEditorPanel'
 import { OperationalTimeline } from './OperationalTimeline'
 import { ExtractedRequirementsPanel } from './ExtractedRequirementsPanel'
 import { VendorSuggestionsPanel } from './VendorSuggestionsPanel'
@@ -15,6 +17,10 @@ import { LoadingIndicator } from './LoadingIndicator'
 export const RFQWorkspace = memo(function RFQWorkspace() {
   const selectedRfq = useRFQDeskStore((s) => s.getSelectedRfq())
   const detailLoading = useRFQDeskStore((s) => s.detailLoading)
+  const [editorOpen, setEditorOpen] = useState(false)
+
+  const openEditor = useCallback(() => setEditorOpen(true), [])
+  const closeEditor = useCallback(() => setEditorOpen(false), [])
 
   if (!selectedRfq) {
     return (
@@ -30,27 +36,41 @@ export const RFQWorkspace = memo(function RFQWorkspace() {
     return <LoadingIndicator />
   }
 
-  return (
-    <motion.div
-      key={selectedRfq.id}
-      {...operationalFade}
-      className="flex flex-col h-full bg-bg-primary overflow-hidden"
-    >
-      <RFQWorkspaceHeader rfq={selectedRfq} />
+  const missingClient = !selectedRfq.clientName
 
-      <div className="flex-1 flex min-h-0 overflow-hidden">
-        <div className="flex-1 min-w-0 overflow-y-auto">
-          <div className="p-4 space-y-4">
-            <SLAStatusPanel rfq={selectedRfq} />
-            <OperationalTimeline rfq={selectedRfq} />
-            <ExtractedRequirementsPanel rfq={selectedRfq} />
-            <VendorSuggestionsPanel rfq={selectedRfq} />
-            <RFQDocumentCenter rfq={selectedRfq} />
-            <AIInsightsPanel rfq={selectedRfq} />
-            <FollowupActionPanel rfq={selectedRfq} />
+  return (
+    <>
+      <motion.div
+        key={selectedRfq.id}
+        {...operationalFade}
+        className="flex flex-col h-full bg-bg-primary overflow-hidden"
+      >
+        <RFQWorkspaceHeader rfq={selectedRfq} onEditClient={openEditor} />
+
+        {missingClient && (
+          <ClientDetailsBanner onAddClient={openEditor} />
+        )}
+
+        <div className="flex-1 flex min-h-0 overflow-hidden">
+          <div className="flex-1 min-w-0 overflow-y-auto">
+            <div className="p-4 space-y-4">
+              <SLAStatusPanel rfq={selectedRfq} />
+              <OperationalTimeline rfq={selectedRfq} />
+              <ExtractedRequirementsPanel rfq={selectedRfq} />
+              <VendorSuggestionsPanel rfq={selectedRfq} />
+              <RFQDocumentCenter rfq={selectedRfq} />
+              <AIInsightsPanel rfq={selectedRfq} />
+              <FollowupActionPanel rfq={selectedRfq} />
+            </div>
           </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      <ClientDetailsEditorPanel
+        rfq={selectedRfq}
+        isOpen={editorOpen}
+        onClose={closeEditor}
+      />
+    </>
   )
 })

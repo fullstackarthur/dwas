@@ -12,8 +12,9 @@ interface RFQQueueListProps {
 export const RFQQueueList = memo(function RFQQueueList({
   collapsed,
 }: RFQQueueListProps) {
-  const { getFilteredRfqs, selectedRfqId, selectRfq, loading } = useRFQDeskStore()
+  const { getFilteredRfqs, selectedRfqId, selectRfq, loading, filters, setFilters } = useRFQDeskStore()
   const rfqs = getFilteredRfqs()
+  const searchQuery = filters.searchQuery ?? ''
 
   if (loading) {
     return (
@@ -30,8 +31,22 @@ export const RFQQueueList = memo(function RFQQueueList({
   if (rfqs.length === 0) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-center">
-          <div className="text-[12px] text-text-muted">No RFQs found</div>
+        <div className="text-center px-4">
+          {searchQuery ? (
+            <>
+              <div className="text-[12px] text-text-muted">
+                No results for <span className="text-text-primary font-medium">&ldquo;{searchQuery}&rdquo;</span>
+              </div>
+              <button
+                onClick={() => setFilters({ searchQuery: '' })}
+                className="mt-2 text-[11px] text-active-blue hover:underline"
+              >
+                Clear search
+              </button>
+            </>
+          ) : (
+            <div className="text-[12px] text-text-muted">No RFQs found</div>
+          )}
         </div>
       </div>
     )

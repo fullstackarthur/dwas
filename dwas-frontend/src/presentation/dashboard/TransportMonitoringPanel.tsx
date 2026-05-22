@@ -1,8 +1,9 @@
 import { memo } from 'react'
-import { mockTransportRecords } from '../../data/mock/operational'
 import type { TransportRecord } from '../../core/types'
 import { FiTruck, FiMapPin, FiClock, FiCheckCircle } from 'react-icons/fi'
 import clsx from 'clsx'
+
+const mockTransportRecords: TransportRecord[] = []
 
 function TransportRow({ record }: { record: TransportRecord }) {
   const statusConfig: Record<string, { color: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {

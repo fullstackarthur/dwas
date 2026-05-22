@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import type { User, Notification, AIRecommendation, BreadcrumbItem } from '../../core/types'
-import { mockUsers, mockNotifications, mockAIRecommendations, mockDashboardMetrics } from '../../data/mock'
 import { useRFQDeskStore } from './rfqStore'
 
 export { useRFQDeskStore }
@@ -53,8 +52,8 @@ interface NotificationState {
 }
 
 export const useNotificationStore = create<NotificationState>((set) => ({
-  notifications: mockNotifications,
-  unreadCount: mockNotifications.filter((n) => !n.read).length,
+  notifications: [],
+  unreadCount: 0,
   setNotifications: (notifications) =>
     set({
       notifications,
@@ -86,7 +85,7 @@ interface AIState {
 }
 
 export const useAIStore = create<AIState>((set) => ({
-  recommendations: mockAIRecommendations,
+  recommendations: [],
   loading: false,
   setRecommendations: (recommendations) => set({ recommendations }),
   setLoading: (loading) => set({ loading }),
@@ -97,19 +96,19 @@ export const useAIStore = create<AIState>((set) => ({
 }))
 
 interface AppState {
-  currentUser: User
-  metrics: typeof mockDashboardMetrics
+  currentUser: User | null
+  metrics: { totalRFQs: number; pendingQuotes: number; activeOrders: number; deliveredToday: number } | null
   syncStatus: 'synced' | 'syncing' | 'error'
   lastSyncAt: string
-  setCurrentUser: (user: User) => void
-  setMetrics: (metrics: typeof mockDashboardMetrics) => void
+  setCurrentUser: (user: User | null) => void
+  setMetrics: (metrics: { totalRFQs: number; pendingQuotes: number; activeOrders: number; deliveredToday: number } | null) => void
   setSyncStatus: (status: 'synced' | 'syncing' | 'error') => void
   triggerSync: () => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  currentUser: mockUsers[0],
-  metrics: mockDashboardMetrics,
+  currentUser: null,
+  metrics: null,
   syncStatus: 'synced',
   lastSyncAt: new Date().toISOString(),
   setCurrentUser: (user) => set({ currentUser: user }),

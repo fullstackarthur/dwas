@@ -1,7 +1,8 @@
 import { memo } from 'react'
 import { FiTruck, FiCheckCircle, FiAlertTriangle, FiClock } from 'react-icons/fi'
 import clsx from 'clsx'
-import { mockDispatchRecords } from '../../data/mock/operational'
+
+const mockDispatchRecords: { id: string; status: string }[] = []
 
 export const DailyOperationalSummary = memo(function DailyOperationalSummary() {
   const today = new Date()
